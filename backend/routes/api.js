@@ -8,7 +8,12 @@ router.get('/restaurants', (req,res) => {
 
 // add new restaurant to db
 router.post('/restaurants', (req,res) => {
-  res.send({type: 'POST'});
+  console.log(req.body);
+  res.send({
+    type: 'POST',
+    name: req.body.name,
+    location: req.body.location
+  });
 });
 
 // get restaurant from db
