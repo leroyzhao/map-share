@@ -1,16 +1,38 @@
 const HTTP_PORT = process.env.PORT || 3000;
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 const routes = require('./routes/api');
+const MONGO_URL = require('./mongoURI');
 
 //set up express app
 const app = express();
+
+// connect to mongodb
+mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
+  console.log("connected to mongoDB")
+}).catch(err => {
+  console.log("CONNECTION FAILED: ",err);
+});
+
+// let db = mongoose.createConnection(MONGO_URL, { useNewUrlParser: true });    
+// //mongoose.connect(MONGO_URL, { useNewUrlParser: true });
+// //var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', () => {
+//   console.log('connected!')
+// });
 
 // body parsing middleware
 app.use(bodyParser.json())
 
 // initialize routes
 app.use('/api', routes);
+
+// error handling middleware
+app.use((err, req, res, next) => {
+  res.status(422).send({error: err})
+});
 
 // listen for requests
 app.listen(HTTP_PORT, () => {

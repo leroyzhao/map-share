@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Restaurant = require('../models/restaurants');
 
 // get list of restaurants from db
 router.get('/restaurants', (req,res) => {
@@ -7,27 +8,30 @@ router.get('/restaurants', (req,res) => {
 });
 
 // add new restaurant to db
-router.post('/restaurants', (req,res) => {
-  console.log(req.body);
-  res.send({
-    type: 'POST',
-    name: req.body.name,
-    location: req.body.location
-  });
+router.post('/restaurants', (req,res,next) => {
+  console.log('1')
+  Restaurant.create(req.body).then((restaurant) => {
+    console.log('2')
+    res.send(restaurant);
+  }).catch(next);
 });
 
 // get restaurant from db
-router.get('/restaurants/:id', (req,res) => {
+router.get('/restaurants/:id', (req,res,next) => {
   res.send({type: 'GET'});
 });
 
 // update restaurant in db
-router.put('/restaurants/:id', (req,res) => {
+router.put('/restaurants/:id', (req,res,next) => {
   res.send({type: 'PUT'});
 });
 
 // delete restaurant in db
-router.delete('/restaurants/:id', (req,res) => {
+router.delete('/restaurants/:id', (req,res,next) => {
+  console.log('delete restaurant with id: ', req.params.id);
+  Restaurant.findByIdAndRemove({_id: req.params.id}).then((restaurant) => {
+    res.send(restaurant);
+  });
   res.send({type: 'DELETE'});
 });
 
