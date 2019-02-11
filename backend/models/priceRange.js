@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// crete ninja Schema & model
+// create priceRange Schema & model
 const PriceRangeSchema = new Schema({
   priceRange: {
     type: Number,
     required: [true, 'priceRange field is required, integers 1,2,3']
   },
-  list: [{
+  restaurantList: [{
     type: String,
   }]
 })

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// crete ninja Schema & model
+// create user Schema & model
 const UserSchema = new Schema({
   userId: {
     type: String,

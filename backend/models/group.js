@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// crete ninja Schema & model
+// create group Schema & model
 const GroupSchema = new Schema({
   groupName: {
     type: String,
     required: [true, 'groupName field is required']
   },
-  members: [{
+  groupMembers: [{
     type: String,
   }]
 })

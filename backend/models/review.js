@@ -1,26 +1,26 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// crete ninja Schema & model
+// create review Schema & model
 const ReviewSchema = new Schema({
   restaurantId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'restaurant',
     required: [true, 'restaurantId is required to save review']
   },
-  reviews: [{
+  reviewList: [{
     reviewId: mongoose.Schema.Types.ObjectId,
-    content: {
+    reviewContent: {
       type: String,
       required: [true, 'content is required to save review']
     },
-    rating: {
+    reviewRating: {
       type: Number,
       required: [true, 'rating is required to save review']
     },
-    userName: {
+    reviewUser: {
       type: String,
-      required: [true, 'username is required to save review']
+      required: [true, 'reviewUser is required to save review']
     },
   }]
 })

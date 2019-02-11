@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// crete ninja Schema & model
+// create restaurant Schema & model
 const RestaurantSchema = new Schema({
   markId: {
     type: String,
     required: [true, 'unique markId is required to save restaurant']
   },
-  name: {
+  restaurantName: {
     type: String,
-    required: [true, 'Name field is required']
+    required: [true, 'restaurantName field is required']
   },
-  location: {
+  restaurantLocation: {
     type: String,
-    required: [true, 'Location (string) is required']
+    required: [true, 'restaurantLocation (string) is required']
   },
-  cuisine: {
+  restaurantCuisine: {
     type: String,
   },
-  priceRange: {
+  restaurantPriceRange: {
     type: Number,
   }
   // total_reviews: {
