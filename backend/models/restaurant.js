@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // crete ninja Schema & model
 const RestaurantSchema = new Schema({
-  mark_id: {
+  markId: {
     type: String,
     required: [true, 'unique mark_id is required to save restaurant']
   },
@@ -18,7 +18,7 @@ const RestaurantSchema = new Schema({
   cuisine: {
     type: String,
   },
-  price_range: {
+  priceRange: {
     type: Number,
   }
   // total_reviews: {

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // crete ninja Schema & model
 const CuisineSchema = new Schema({
-  type: {
+  cuisineType: {
     type: String,
     required: [true, 'Name field is required']
   },
