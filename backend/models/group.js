@@ -12,6 +12,6 @@ const GroupSchema = new Schema({
   }]
 })
 
-const Group = mongoose.model('restaurant', GroupSchema);
+const Group = mongoose.model('group', GroupSchema);
 
 module.exports = Group;
