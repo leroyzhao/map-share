@@ -9,7 +9,7 @@ const ReviewSchema = new Schema({
     required: [true, 'restaurantId is required to save review']
   },
   reviewList: [{
-    reviewId: mongoose.Schema.Types.ObjectId,
+    reviewId: Schema.Types.ObjectId,
     reviewContent: {
       type: String,
       required: [true, 'content is required to save review']
