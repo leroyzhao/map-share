@@ -4,6 +4,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const routes = require('./routes/api');
 const MONGO_URL = require('./mongoURI');
+const dataService = require("./dataService.js");
+
+const data = dataService();
 
 //set up express app
 const app = express();

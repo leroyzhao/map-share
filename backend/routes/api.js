@@ -9,10 +9,11 @@ router.get('/restaurants', (req,res) => {
 
 // add new restaurant to db
 router.post('/restaurants', (req,res,next) => {
-  // Restaurant.create(req.body).then((restaurant) => {
-  //   res.send(restaurant);
-  // }).catch(next);
-  res.send({'body': req.body});
+  Restaurant.create(req.body).then((restaurant) => {
+    res.send(restaurant);
+  }).catch(next);
+  //res.send({'body': req.body});
+  res.send({'some kinda error!': req.body})
 });
 
 /////////////////////////RESTAURANTS///////////////////////////////
