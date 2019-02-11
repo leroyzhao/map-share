@@ -12,7 +12,9 @@ const app = express();
 mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
   console.log("connected to mongoDB")
 }).catch(err => {
-  console.log("CONNECTION FAILED: ",err);
+  console.log("ERRORS: ",err);
+  console.log("MONGODB CONNECTION FAILED.")
+  // process.exit();
 });
 
 // let db = mongoose.createConnection(MONGO_URL, { useNewUrlParser: true });    

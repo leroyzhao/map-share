@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Restaurant = require('../models/restaurants');
+const Restaurant = require('../models/restaurant');
 
 // get list of restaurants from db
 router.get('/restaurants', (req,res) => {
@@ -9,9 +9,7 @@ router.get('/restaurants', (req,res) => {
 
 // add new restaurant to db
 router.post('/restaurants', (req,res,next) => {
-  console.log('1')
   Restaurant.create(req.body).then((restaurant) => {
-    console.log('2')
     res.send(restaurant);
   }).catch(next);
 });
