@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema({
   markId: {
     type: String,
-    required: [true, 'unique mark_id is required to save restaurant']
+    required: [true, 'unique markId is required to save restaurant']
   },
   name: {
     type: String,
