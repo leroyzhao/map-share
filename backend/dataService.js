@@ -137,6 +137,33 @@ module.exports = () => {
       })
     },
 
+    getMarks: () => {
+      return new Promise((resolve, reject) => {
+        Mark.find()
+        .then(data => {
+          console.log('data retrieved?', data)
+          resolve(data)
+        }).catch(err => {
+          console.log('ERROROROOR')
+          reject(err)
+        });
+      });
+    },
+
+    getUsers: () => {
+      return new Promise((resolve, reject) => {
+        User.find()
+        .then(data => {
+          console.log('data retrieved?', data)
+          resolve(data)
+        }).catch(err => {
+          console.log('ERROROROOR')
+          reject(err)
+        });
+      });
+    },
+
+
 
   }
 }
