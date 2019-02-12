@@ -58,6 +58,84 @@ module.exports = () => {
       });
     },
 
+    // add mark and restaurant with common locationId
+    addRestaurant: (restuarantData) => {
+      return new Promise((resolve, reject) => {
+
+        let commonId = ''
+        console.log('body data: ', restuarantData)
+
+        Mark.create({
+          locationId: new mongoose.Types.ObjectId()
+        }).then(data => {
+          console.log('returned from mark', data)
+          commonId = data.locationId
+          console.log('ID to use: ', commonId)
+
+        }).then(data => {     // redudant then
+          console.log('c after then: ', commonId)
+
+          Restaurant.create({
+            ...restuarantData,
+            locationId: commonId
+          }).then(data => {
+            console.log('returned from restaurant: ', data)
+            resolve(data)
+          }).catch(err => {
+            console.log(4, err)
+            reject('errored 2')
+          });
+        }).catch(() => {
+          console.log(3)
+          reject('errored 1')
+        });
+      })
+    },
+
+
+    // delete restaurant and corresponding mark
+    deleteRestaurantById: (locationId) => {
+      return new Promise((resolve, reject) => {
+        let errorMessage = ''
+        let restaurantDeleted = false
+        let markDeleted = false
+
+        // delete restaurant
+        Restaurant.deleteOne({ locationId })
+          .exec()
+          .then(data => {
+            console.log("HEEERE: ", data)
+
+            if (data.deletedCount === 1) {
+              restaurantDeleted = true
+            }
+
+            // delete mark
+            Mark.deleteOne({ locationId })
+              .exec()
+              .then(data => {
+                console.log('mark delete results:', data)
+                if (data.deletedCount === 1) {
+                  markDeleted = true
+                  if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
+                  else errorMessage = 'mark deleted, restaurant with specified id does not exist'
+                } else {
+                  if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'
+                  else errorMessage = 'no mark or restaurant with specified id'
+                }
+                reject(errorMessage)
+              })
+              .catch(err => {
+                console.log('fail')
+                reject(err.message)
+            });
+
+          }).catch(err => {
+            console.log('failed?')
+            reject(err.message)
+          });
+      })
+    },
 
 
   }
