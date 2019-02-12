@@ -1,26 +1,54 @@
 const express = require("express");
 const router = express.Router();
-const Restaurant = require('../models/restaurant');
+// const Restaurant = require('../models/restaurant');
+// const Cuisine = require('../models/cuisine');
+// const Mark = require('../models/mark');
+// const PriceRange = require('../models/priceRange');
+// const Review = require('../models/review');
+// const User = require('../models/user');
+
+const dataService = require("../dataService");
+
+const data = dataService();
 
 // get list of restaurants from db
-router.get('/restaurants', (req,res) => {
-  res.send({type: 'GET'});
+router.get('/restaurants', (req,res,next) => {
+  data.getRestaurants().then(data => {
+    res.json(data);
+  }).catch(err => {
+    res.send({'ilya error?': err})
+  })
 });
 
 // add new restaurant to db
 router.post('/restaurants', (req,res,next) => {
-  Restaurant.create(req.body).then((restaurant) => {
-    res.send(restaurant);
-  }).catch(next);
-  //res.send({'body': req.body});
-  res.send({'some kinda error!': req.body})
+
+  // data service add restaurant
+  console.log('ello')
+
+  data.addRestaurant(req.body).then(data => {
+    console.log('ello2')
+    console.log('answer: ', data)
+    res.status(201).json(data)
+  }).catch(err => {
+    console.log('ello3', err)
+    res.status(500).end()
+  })
 });
 
 /////////////////////////RESTAURANTS///////////////////////////////
 
 // get restaurant from db
 router.get('/restaurants/:id', (req,res,next) => {
-  res.send({type: 'GET'});
+
+  // data service getRestaurantById (locationId)
+  data.getRestaurantById(req.params.id).then(data => {
+    console.log('got restaurant data: ', data)
+    res.status(200).json(data)
+  }).catch(err => {
+    console.log('error is: ', err)
+    res.status(400).send({'error:': err})
+  })
 });
 
 // update restaurant in db
@@ -31,10 +59,12 @@ router.put('/restaurants/:id', (req,res,next) => {
 // delete restaurant in db
 router.delete('/restaurants/:id', (req,res,next) => {
   console.log('delete restaurant with id: ', req.params.id);
-  Restaurant.findByIdAndRemove({_id: req.params.id}).then((restaurant) => {
-    res.send(restaurant);
-  });
-  res.send({type: 'DELETE'});
+
+  data.deleteRestaurantById(req.params.id).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send({'error': err})
+  })
 });
 
 /////////////////////////REVIEWS///////////////////////////////
@@ -53,14 +83,22 @@ router.put('/reviews/:id', (req,res,next) => {
 
 // get all marks to populate map
 router.get('/marks', (req,res,next) => {
-  res.send({type: 'GET all marks'});
+  data.getMarks().then(data => {
+    res.json(data);
+  }).catch(err => {
+    res.send({'ilya error?': err})
+  })
 });
 
 /////////////////////////USER///////////////////////////////
 
 // get all users???
 router.get('/users', (req,res,next) => {
-  res.send({type: 'GET all users'});
+  data.getUsers().then(data => {
+    res.json(data);
+  }).catch(err => {
+    res.send({'ilya error?': err})
+  })
 });
 
 // add new user
