@@ -36,6 +36,28 @@ module.exports = () => {
       });
     },
 
+    getRestaurantById: (locationId) => {
+      return new Promise((resolve, reject) => {
+
+        // validate location ******ADD ! TO IMPLEMENT******
+        // if (locationId.match(/^[0-9a-fA-F]{24}$/)) {
+        //   reject('invalid id')
+        // }
+
+        Restaurant.find({ locationId })//: new mongoose.Types.ObjectId() })
+          .exec()
+          .then(data => {
+            console.log('search results:', data)
+            resolve(data)
+          })
+          .catch(err => {
+            console.log('fail')
+            reject(err)
+        });
+
+      });
+    },
+
 
 
   }
