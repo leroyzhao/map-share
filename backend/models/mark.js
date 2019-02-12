@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 // create mark Schema & model
 const MarkSchema = new Schema({
-  markId: {
-    type: String,
-    required: [true, 'unique markId is required to save user / OR USE _OID????']
+  locationId: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'unique locationId is required to save user / OR USE _OID????']
   },
   markCoordinates: {
     long: Number,
@@ -13,9 +13,13 @@ const MarkSchema = new Schema({
   },
   restaurantId: {
     type: String,
-    required: [true, 'corresponding restaurantId required for mark']
+    //required: [true, 'corresponding restaurantId required for mark']
   }
 })
+// , {
+//   toObject: {virtuals: true},
+//   toJSON: {virtuals: true}
+// })
 
 const Mark = mongoose.model('mark', MarkSchema);
 

@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 
 // create restaurant Schema & model
 const RestaurantSchema = new Schema({
-  markId: {
-    type: String,
-    required: [true, 'unique markId is required to save restaurant']
+  locationId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Mark',
+    required: [true, 'locationId is required to save restaurant']
   },
   restaurantName: {
     type: String,
@@ -29,7 +30,7 @@ const RestaurantSchema = new Schema({
   //   type: Number,
   //   default: 0,
   // }
-})
+})//, { _id: false})
 
 const Restaurant = mongoose.model('restaurant', RestaurantSchema);
 
