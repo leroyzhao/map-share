@@ -141,7 +141,7 @@ module.exports = () => {
       return new Promise((resolve, reject) => {
         console.log('running?')
 
-        MyModel.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
+        Restaurant.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
           console.log('no errors, but is this new/old: ', data);
           resolve(data)
         }).catch(err => {
