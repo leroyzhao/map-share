@@ -137,6 +137,21 @@ module.exports = () => {
       })
     },
 
+    updateRestaurantById: (locationId, newData) => {
+      return new Promise((resolve, reject) => {
+        console.log('running?')
+
+        MyModel.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
+          console.log('no errors, but is this new/old: ', data);
+          resolve(data)
+        }).catch(err => {
+          console.log('problem??', err)
+          reject(err)
+        });
+
+      })
+    },
+
     getMarks: () => {
       return new Promise((resolve, reject) => {
         Mark.find()

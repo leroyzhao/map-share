@@ -53,7 +53,16 @@ router.get('/restaurants/:id', (req,res,next) => {
 
 // update restaurant in db
 router.put('/restaurants/:id', (req,res,next) => {
-  res.send({type: 'PUT'});
+  console.log('update info of restaurant with id:', req.params.id);
+  console.log('new data: ', req.body)
+
+  data.updateRestaurantById(req.params.id, req.body).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    console.log('returning smt')
+    res.status(400).send({'error': err})
+  })
+
 });
 
 // delete restaurant in db
