@@ -107,7 +107,13 @@ router.put('/reviews/:id', (req,res,next) => {
 
 // user deletes review
 router.delete('/reviews/:id', (req,res,next) => {
-  res.send({type: 'PUT REVIEW'});
+  console.log('delete review with id: ', req.params.id);
+
+  data.deleteReviewById(req.params.id).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send({'error': err})
+  })
 });
 
 /////////////////////////MARKS///////////////////////////////

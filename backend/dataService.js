@@ -182,6 +182,21 @@ module.exports = () => {
       })
     },
 
+    deleteReviewById: (id) => {
+      return new Promise((resolve, reject) => {
+
+        Review.findByIdAndDelete({ id }).then(data => {
+          console.log('review delete results:', data)
+          if (data.deletedCount === 1) resolve({'success': 'review deleted'})
+          else reject('no review with specified id')
+        }).catch(err => {
+          console.log('fail')
+          reject(err.message)
+        });
+
+      })
+    },
+
     getMarks: () => {
       return new Promise((resolve, reject) => {
         Mark.find()
