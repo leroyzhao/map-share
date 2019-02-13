@@ -93,7 +93,16 @@ router.post('/reviews', (req,res,next) => {
 
 // user edits review???
 router.put('/reviews/:id', (req,res,next) => {
-  res.send({type: 'PUT REVIEW'});
+  console.log('update review with id:', req.params.id);
+  console.log('new data: ', req.body)
+
+  data.updateReviewById(req.params.id, req.body).then(data => {
+    console.log('no err')
+    res.status(200).json(data)
+  }).catch(err => {
+    console.log('err')
+    res.status(400).send({'error': err})
+  })
 });
 
 // user deletes review

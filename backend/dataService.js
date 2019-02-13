@@ -170,6 +170,18 @@ module.exports = () => {
       })
     },
 
+    updateReviewById: (reviewId, newReview) => {
+      return new Promise((resolve, reject) => {
+        Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
+          console.log('success?', data)
+          resolve(data)
+        }).catch(err => {
+          console.log('err', err)
+          reject(err)
+        })
+      })
+    },
+
     getMarks: () => {
       return new Promise((resolve, reject) => {
         Mark.find()
