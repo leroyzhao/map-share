@@ -151,6 +151,24 @@ module.exports = () => {
 
       })
     },
+    
+    addReview: (reviewData) => {
+      return new Promise((resolve, reject) => {
+        console.log('body data: ', reviewData)
+
+        // format creation body first?
+        // check if provided userId is valid first?
+        Review.create({
+          reviewData
+        }).then(data => {
+          console.log('returned from review creation', data)
+          resolve(data)
+        }).catch(err => {
+          console.log('error')
+          reject(err)
+        });
+      })
+    },
 
     getMarks: () => {
       return new Promise((resolve, reject) => {

@@ -79,12 +79,25 @@ router.delete('/restaurants/:id', (req,res,next) => {
 /////////////////////////REVIEWS///////////////////////////////
 
 // user adds review
-router.post('/reviews/:id', (req,res,next) => {
-  res.send({type: 'POST REVIEW'});
+router.post('/reviews', (req,res,next) => {
+  console.log('add review for which restuarant id?', req.body)
+
+  data.addReview(req.body).then(data => {
+    console.log('answer: ', data)
+    res.status(201).json(data)
+  }).catch(err => {
+    console.log('error', err)
+    res.status(400).send({'error': err})
+  })
 });
 
 // user edits review???
 router.put('/reviews/:id', (req,res,next) => {
+  res.send({type: 'PUT REVIEW'});
+});
+
+// user deletes review
+router.delete('/reviews/:id', (req,res,next) => {
   res.send({type: 'PUT REVIEW'});
 });
 
