@@ -32,7 +32,7 @@ router.post('/restaurants', (req,res,next) => {
     res.status(201).json(data)
   }).catch(err => {
     console.log('ello3', err)
-    res.status(500).end()
+    res.status(400).send(err)
   })
 });
 
@@ -57,7 +57,7 @@ router.put('/restaurants/:id', (req,res,next) => {
   console.log('new data: ', req.body)
 
   data.updateRestaurantById(req.params.id, req.body).then(data => {
-    res.status(200).json(data)
+    res.status(200).json(data) // returns old data
   }).catch(err => {
     console.log('returning smt')
     res.status(400).send({'error': err})
@@ -86,7 +86,6 @@ router.post('/reviews', (req,res,next) => {
     console.log('answer: ', data)
     res.status(201).json(data)
   }).catch(err => {
-    console.log('error', err)
     res.status(400).send({'error': err})
   })
 });
@@ -97,10 +96,8 @@ router.put('/reviews/:id', (req,res,next) => {
   console.log('new data: ', req.body)
 
   data.updateReviewById(req.params.id, req.body).then(data => {
-    console.log('no err')
     res.status(200).json(data)
   }).catch(err => {
-    console.log('err')
     res.status(400).send({'error': err})
   })
 });
