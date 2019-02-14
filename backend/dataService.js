@@ -59,6 +59,8 @@ module.exports = () => {
     },
 
     // add mark and restaurant with common locationId
+
+    //PREVENT ADDING DUPLICATE??
     addRestaurant: (restuarantData) => {
       return new Promise((resolve, reject) => {
 
@@ -83,11 +85,11 @@ module.exports = () => {
             resolve(data)
           }).catch(err => {
             console.log(4, err)
-            reject('errored 2')
+            reject(err)
           });
         }).catch(() => {
           console.log(3)
-          reject('errored 1')
+          reject(err)
         });
       })
     },
@@ -104,7 +106,7 @@ module.exports = () => {
         Restaurant.deleteOne({ locationId })
           .exec()
           .then(data => {
-            console.log("HEEERE: ", data)
+            console.log("restaraunt deleted count: ", data.deletedCount)
 
             if (data.deletedCount === 1) {
               restaurantDeleted = true
@@ -114,7 +116,7 @@ module.exports = () => {
             Mark.deleteOne({ locationId })
               .exec()
               .then(data => {
-                console.log('mark delete results:', data)
+                console.log('mark deleted count: ', data.deletedCount)
                 if (data.deletedCount === 1) {
                   markDeleted = true
                   if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
@@ -142,11 +144,11 @@ module.exports = () => {
         console.log('running?')
 
         Restaurant.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
-          console.log('no errors, but is this new/old: ', data);
+          console.log('successfull update, this is old: ', data);
           resolve(data)
         }).catch(err => {
-          console.log('problem??', err)
-          reject(err)
+          console.log('problem??', err.message)
+          reject(err.message)
         });
 
       })
@@ -157,26 +159,36 @@ module.exports = () => {
         console.log('body data: ', reviewData)
 
         // format creation body first?
-        // check if provided userId is valid first?
+        // check if provided userId/restuarantId is valid first?
         Review.create({
-          reviewData
+          ...reviewData
         }).then(data => {
           console.log('returned from review creation', data)
           resolve(data)
         }).catch(err => {
-          console.log('error')
+          //console.log('HERE', err.message, err.name)
           reject(err)
+          //reject({"name": err.name, "message": err.message})
         });
       })
     },
 
     updateReviewById: (reviewId, newReview) => {
       return new Promise((resolve, reject) => {
+
+        // check if restaurant&user id match! then update. otherwise throw error
+
+        // Review.pre('validate', function(next) {
+        //   console.log("WOOOOO")
+        //   if (self.isModified('_createdOn')) {
+        //       self.invalidate('_createdOn');
+        //   }
+        // });
         Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
-          console.log('success?', data)
-          resolve(data)
+          if (data) {console.log('review delete results:', data)
+            resolve({'success': 'review updated'})
+          } else reject('no review with specified id')
         }).catch(err => {
-          console.log('err', err)
           reject(err)
         })
       })
@@ -185,10 +197,10 @@ module.exports = () => {
     deleteReviewById: (id) => {
       return new Promise((resolve, reject) => {
 
-        Review.findByIdAndDelete({ id }).then(data => {
-          console.log('review delete results:', data)
-          if (data.deletedCount === 1) resolve({'success': 'review deleted'})
-          else reject('no review with specified id')
+        Review.findByIdAndDelete(id).then(data => {
+          if (data) {console.log('review delete results:', data)
+            resolve({'success': 'review deleted'})
+          } else reject('no review with specified id')
         }).catch(err => {
           console.log('fail')
           reject(err.message)
@@ -222,6 +234,7 @@ module.exports = () => {
         });
       });
     },
+    
 
 
 
