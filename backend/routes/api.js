@@ -126,7 +126,7 @@ router.get('/marks', (req,res,next) => {
 
 /////////////////////////USER///////////////////////////////
 
-// get all users???
+// get all users
 router.get('/users', (req,res,next) => {
   data.getUsers().then(data => {
     res.json(data);
@@ -143,6 +143,15 @@ router.post('/users', (req,res,next) => {
     res.status(400).send({"error": err})
   })
 });
+
+// get user by id
+router.get('/users/:id', (req,res,next) => {
+  data.getUserById(req.params.id).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send({"error": err})
+  })
+})
 
 /////////////////////////CUISINE///////////////////////////////
 

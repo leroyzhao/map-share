@@ -185,7 +185,8 @@ module.exports = () => {
         //   }
         // });
         Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
-          if (data) {console.log('review delete results:', data)
+          if (data) {
+            console.log('review delete results:', data)
             resolve({'success': 'review updated'})
           } else reject('no review with specified id')
         }).catch(err => {
@@ -198,7 +199,8 @@ module.exports = () => {
       return new Promise((resolve, reject) => {
 
         Review.findByIdAndDelete(id).then(data => {
-          if (data) {console.log('review delete results:', data)
+          if (data) {
+            console.log('review delete results:', data)
             resolve({'success': 'review deleted'})
           } else reject('no review with specified id')
         }).catch(err => {
@@ -251,6 +253,22 @@ module.exports = () => {
         });
       })
     },
+    
+    getUserById: (userId) => {
+      return new Promise((resolve, reject) => {
+        console.log(userId)
+        User.findById(userId)
+          .then(data => {
+            if (data) resolve(data)
+            else reject('no user with specified id')
+          })
+          .catch(err => {
+            console.log('fail')
+            reject(err)
+        });
+      });
+    },
+
 
 
 
