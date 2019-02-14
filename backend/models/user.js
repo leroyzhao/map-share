@@ -3,12 +3,9 @@ const Schema = mongoose.Schema;
 
 // create user Schema & model
 const UserSchema = new Schema({
-  userId: {
-    type: String,
-    required: [true, 'unique userId is required to save user / OR USE _OID????']
-  },
   userEmail: {
     type: String,
+    unique: true,
     required: [true, 'Name field is required']
   },
   userFirstName: {
@@ -21,6 +18,8 @@ const UserSchema = new Schema({
   },
   userGroupId: String
 })
+
+UserSchema.virtual('userId').get(function() { return this._id; });
 
 const User = mongoose.model('user', UserSchema);
 

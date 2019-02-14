@@ -136,8 +136,12 @@ router.get('/users', (req,res,next) => {
 });
 
 // add new user
-router.post('/users/:userId', (req,res,next) => {
-  res.send({type: 'POST user'});
+router.post('/users', (req,res,next) => {
+  data.addUser(req.body).then(data => {
+    res.status(200).json(data);
+  }).catch(err => {
+    res.status(400).send({"error": err})
+  })
 });
 
 /////////////////////////CUISINE///////////////////////////////

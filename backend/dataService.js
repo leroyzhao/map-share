@@ -235,6 +235,22 @@ module.exports = () => {
       });
     },
     
+    addUser: (userData) => {
+      return new Promise((resolve, reject) => {
+        console.log('new user data: ', userData)
+
+        // format creation body first?
+        // create. if exists, return error? currently email can't be duplicate
+        User.create({
+          ...userData
+        }).then(data => {
+          console.log('userId: ', data.userId)
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        });
+      })
+    },
 
 
 
