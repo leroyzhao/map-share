@@ -72,6 +72,15 @@ router.delete('/restaurants/:id', (req,res,next) => {
 
 /////////////////////////REVIEWS///////////////////////////////
 
+//get reviews by restuarant
+router.get('/reviews', (req,res,next) => {
+  data.getReviewsByRestaurant(req.body).then(data => { //getAllReviews()
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send(err)
+  })
+})
+
 // user adds review
 router.post('/reviews', (req,res,next) => {
   console.log('add review for which restuarant id?', req.body)

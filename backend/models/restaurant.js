@@ -21,7 +21,11 @@ const RestaurantSchema = new Schema({
   },
   restaurantPriceRange: {
     type: Number,
-  }
+  },
+  restaurantReviews: [{
+    type: Schema.Types.ObjectId,
+    ref: 'review'
+  }]
   // total_reviews: {
   //   type: Number,
   //   default: 0,

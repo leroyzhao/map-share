@@ -179,6 +179,41 @@ module.exports = () => {
 
       })
     },
+
+    //get reviews for specific restauarant
+    getAllReviews: () => {
+      return new Promise((resolve, reject) => {
+        Review.find()
+        .then(data => {
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        });
+      })
+    },
+
+    getReviewsByRestaurant: (reqBody) => {
+      return new Promise((resolve, reject) => {
+
+        let { locationId } = reqBody
+        if (!locationId) {
+          reject({"error": "include locationId in body"})
+          return;
+        }
+
+        // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
+        Restaurant.findOne({locationId}).populate("restaurantReviews").then(data => {
+          if (data) {
+            console.log('restaurantReviews', data.restaurantReviews)
+            resolve(data)
+          } else reject({"error": "no restaurant with specified id"})
+        }).catch(err => {
+          console.log('error', err)
+          reject(err)
+        });
+
+      });
+    },
     
     addReview: (reviewData) => {
       return new Promise((resolve, reject) => {
@@ -189,8 +224,20 @@ module.exports = () => {
         Review.create({
           ...reviewData
         }).then(data => {
-          console.log('returned from review creation', data)
-          resolve(data)
+          console.log('returned from review creation', data, data.id)
+
+          Restaurant.findOneAndUpdate(
+            { locationId: data.restaurantId },
+            { $push: { restaurantReviews: data.id } },//data.locationId
+            { runValidators: true }
+          ).then(data => {
+            console.log('returned from adding review to restaurant', data)
+            resolve(data)
+          }).catch(err => {
+            console.log('couldnt add review to restuarant')
+            reject(err)
+          })
+
         }).catch(err => {
           //console.log('HERE', err.message, err.name)
           reject(err)
@@ -246,6 +293,7 @@ module.exports = () => {
           return;
         }
 
+        // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
         Group.findById(groupId).populate("groupMarks").then(data => {
           console.log('newdata', data)
           console.log('groupmarkers', data.groupMarks)
@@ -255,7 +303,7 @@ module.exports = () => {
           reject(err)
         });
 
-        // Mark.find()
+        // Mark.find({ groupId })
         // .then(data => {
         //   resolve(data)
         // }).catch(err => {
@@ -263,19 +311,6 @@ module.exports = () => {
         //   reject(err)
         // });
       });
-    },
-
-    //get reviews for specific restauarant
-    
-    getReviews: () => {
-      return new Promise((resolve, reject) => {
-        Review.find()
-        .then(data => {
-          resolve(data)
-        }).catch(err => {
-          reject(err)
-        });
-      })
     },
 
     getUsers: () => {
