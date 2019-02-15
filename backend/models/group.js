@@ -9,8 +9,11 @@ const GroupSchema = new Schema({
   },
   groupMembers: [{
     type: String,
-  }]
+  }],
+  groupMarks: [{ type: Schema.Types.ObjectId, ref: "mark" }]
 })
+
+GroupSchema.virtual('groupId').get(function() { return this._id; });
 
 const Group = mongoose.model('group', GroupSchema);
 

@@ -16,7 +16,12 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'user lastName is required']
   },
-  userGroupId: String
+  userGroups: [
+    {
+      groupId: String,
+      groupName: String
+    }
+  ]
 })
 
 UserSchema.virtual('userId').get(function() { return this._id; });

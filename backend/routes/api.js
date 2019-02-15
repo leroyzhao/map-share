@@ -22,16 +22,10 @@ router.get('/restaurants', (req,res,next) => {
 
 // add new restaurant to db
 router.post('/restaurants', (req,res,next) => {
-
-  // data service add restaurant
-  console.log('ello')
-
   data.addRestaurant(req.body).then(data => {
-    console.log('ello2')
     console.log('answer: ', data)
     res.status(201).json(data)
   }).catch(err => {
-    console.log('ello3', err)
     res.status(400).send(err)
   })
 });
@@ -117,10 +111,10 @@ router.delete('/reviews/:id', (req,res,next) => {
 
 // get all marks to populate map
 router.get('/marks', (req,res,next) => {
-  data.getMarks().then(data => {
+  data.getMarks(req.body).then(data => {
     res.json(data);
   }).catch(err => {
-    res.send({'ilya error?': err})
+    res.send(err)
   })
 });
 
@@ -176,7 +170,20 @@ router.get('/priceRanges/:priceRange', (req,res,next) => {
 
 //list groups
 router.get('/groups', (req,res,next) => {
-  res.send({type: 'GET list of group names'});
+  data.getGroups().then(data => {
+    res.json(data);
+  }).catch(err => {
+    res.send({'ilya error?': err})
+  })
+});
+
+//add group
+router.post('/groups', (req,res,next) => {
+  data.addGroup(req.body).then(data => {
+    res.status(200).json(data);
+  }).catch(err => {
+    res.status(400).send({"error": err})
+  })
 });
 
 //list members of group

@@ -14,7 +14,8 @@ const MarkSchema = new Schema({
   restaurantId: {
     type: String,
     //required: [true, 'corresponding restaurantId required for mark']
-  }
+  },
+  groupId: Schema.Types.ObjectId
 })
 // , {
 //   toObject: {virtuals: true},

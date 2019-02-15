@@ -7,6 +7,7 @@ const Mark = require('./models/mark');
 const PriceRange = require('./models/priceRange');
 const Review = require('./models/review');
 const User = require('./models/user');
+const Group = require('./models/group');
 
 module.exports = () => {
   return {
@@ -44,11 +45,12 @@ module.exports = () => {
         //   reject('invalid id')
         // }
 
-        Restaurant.find({ locationId })//: new mongoose.Types.ObjectId() })
-          .exec()
+        Restaurant.findOne({ locationId })//: new mongoose.Types.ObjectId() })
           .then(data => {
-            console.log('search results:', data)
-            resolve(data)
+            if (data) {
+              console.log('search result: ', data)
+              resolve(data)
+            } else reject('no restaurant with specified id')
           })
           .catch(err => {
             console.log('fail')
@@ -64,30 +66,54 @@ module.exports = () => {
     addRestaurant: (restuarantData) => {
       return new Promise((resolve, reject) => {
 
-        let commonId = ''
+        let { groupId } = restuarantData
+        if (!groupId) { // check if group id is valid
+          reject({"error": "need groupId!"})
+          return;
+        }
+
+        console.log(groupId)
         console.log('body data: ', restuarantData)
+        let refId = ''
 
         Mark.create({
-          locationId: new mongoose.Types.ObjectId()
+          locationId: new mongoose.Types.ObjectId(),
         }).then(data => {
           console.log('returned from mark', data)
-          commonId = data.locationId
-          console.log('ID to use: ', commonId)
-
-        }).then(data => {     // redudant then
-          console.log('c after then: ', commonId)
+          refId = data.id
+          console.log('ID to use: ', data.locationId)
 
           Restaurant.create({
             ...restuarantData,
-            locationId: commonId
+            locationId: data.locationId
           }).then(data => {
             console.log('returned from restaurant: ', data)
+
+            // if (groupId) {
+
+              Group.findByIdAndUpdate(
+                groupId,
+                { $push: { groupMarks: refId } },//data.locationId
+                { runValidators: true }
+              ).then(data => {
+                console.log('returned from adding marker to group', data)
+              }).catch(err => {
+                console.log('couldnt add marker to group')
+                reject(err)
+              })
+
+            // } else {
+            //   reject("mark and restuarant, but not added to group")
+            //   return;
+            // }
+
+            console.log('resolving!')
             resolve(data)
           }).catch(err => {
             console.log(4, err)
             reject(err)
           });
-        }).catch(() => {
+        }).catch(err => {
           console.log(3)
           reject(err)
         });
@@ -211,17 +237,45 @@ module.exports = () => {
       })
     },
 
-    getMarks: () => {
+    getMarks: (reqBody) => {
       return new Promise((resolve, reject) => {
-        Mark.find()
-        .then(data => {
-          console.log('data retrieved?', data)
+
+        let { groupId } = reqBody
+        if (!groupId) {
+          reject({"error": "include groupId in body"})
+          return;
+        }
+
+        Group.findById(groupId).populate("groupMarks").then(data => {
+          console.log('newdata', data)
+          console.log('groupmarkers', data.groupMarks)
           resolve(data)
         }).catch(err => {
-          console.log('ERROROROOR')
+          console.log('error', err)
           reject(err)
         });
+
+        // Mark.find()
+        // .then(data => {
+        //   resolve(data)
+        // }).catch(err => {
+        //   console.log('ERROROROOR')
+        //   reject(err)
+        // });
       });
+    },
+
+    //get reviews for specific restauarant
+    
+    getReviews: () => {
+      return new Promise((resolve, reject) => {
+        Review.find()
+        .then(data => {
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        });
+      })
     },
 
     getUsers: () => {
@@ -267,6 +321,37 @@ module.exports = () => {
             reject(err)
         });
       });
+    },
+    
+    getGroups: () => {
+      return new Promise((resolve, reject) => {
+        Group.find()
+        .then(data => {
+          console.log('data retrieved?', data)
+          resolve(data)
+        }).catch(err => {
+          console.log('ERROROROOR')
+          reject(err)
+        });
+      });
+    },
+    
+    addGroup: (groupData) => {
+      return new Promise((resolve, reject) => {
+        console.log('new groupData: ', groupData)
+
+        // format creation body first?
+        // create. if exists, return error?
+        Group.create({
+          ...groupData
+        }).then(data => {
+          console.log('groupId: ', data.groupId)
+          resolve(data)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        });
+      })
     },
 
 
