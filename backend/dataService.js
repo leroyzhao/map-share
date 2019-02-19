@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId
 
 const Restaurant = require('./models/restaurant');
 const Cuisine = require('./models/cuisine');
@@ -45,7 +44,7 @@ module.exports = () => {
         //   reject('invalid id')
         // }
 
-        Restaurant.findOne({ locationId })//: new mongoose.Types.ObjectId() })
+        Restaurant.findOne({ locationId })
           .then(data => {
             if (data) {
               console.log('search result: ', data)
@@ -148,6 +147,7 @@ module.exports = () => {
                 if (data.deletedCount === 1) {
                   markDeleted = true
                   if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
+                  ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY////////////
                   else errorMessage = 'mark deleted, restaurant with specified id does not exist'
                 } else {
                   if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'
@@ -221,7 +221,7 @@ module.exports = () => {
         console.log('body data: ', reviewData)
 
         // format creation body first?
-        // check if provided userId/restuarantId is valid first?
+        // check if provided userId/restaurantId is valid first?
         Review.create({
           ...reviewData
         }).then(data => {
@@ -240,9 +240,7 @@ module.exports = () => {
           })
 
         }).catch(err => {
-          //console.log('HERE', err.message, err.name)
           reject(err)
-          //reject({"name": err.name, "message": err.message})
         });
       })
     },
@@ -359,9 +357,6 @@ module.exports = () => {
           near: {
             type: "Point",
             coordinates
-            // coordinates: coordinates.map((coordinate) => {
-            //   return parseFloat(coordinate)
-            // })
           },
           maxDistance: 100000,
           spherical: true,
@@ -423,7 +418,7 @@ module.exports = () => {
     
     getGroups: () => {
       return new Promise((resolve, reject) => {
-        Group.find()
+        Group.find().populate("groupMarks")
         .then(data => {
           console.log('data retrieved?', data)
           resolve(data)

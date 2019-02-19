@@ -5,7 +5,22 @@ const Schema = mongoose.Schema;
 const ReviewSchema = new Schema({
   restaurantId: {
     type: Schema.Types.ObjectId,
-    required: [true, 'restarantId is required for review']
+    required: [true, 'restarantId is required for review'],
+    set: function(id) {
+      this.previousResId = this.restaurantId;
+      this._conditions = { ...this._conditions, restaurantId:id}
+      console.log(id, "Previous restaurant id: ")
+      return id
+    }
+
+    // validate: {
+    //   validator: function(v) {
+    //     console.log("YYYYYYYYEEEEEEEEEOOOOOOOOOOOOOOOOOOOO", v)
+    //     return null
+    //     //return /\d{3}-\d{3}-\d{4}/.test(v);
+    //   },
+    //   message: props => `${props.value} is not a valid phone number!`
+    // },
   },
   reviewContent: {
     type: String,
@@ -22,7 +37,7 @@ const ReviewSchema = new Schema({
     },
     userName: String
   },
-})
+}, { runSettersOnQuery: true })
 
 // const ReviewSchema = new Schema({
 //   restaurantId: {
@@ -46,6 +61,22 @@ const ReviewSchema = new Schema({
 //     },
 //   }]
 // })
+
+// ReviewSchema.pre('validate', function (next) {
+//   console.log('YEEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO') // current document
+//   next()
+// })
+
+ReviewSchema.pre('findOneAndUpdate', function(next) {
+  console.log('validating!!!!!!!!!!!!!!!!!!!!')
+  console.log(this._previousResId)
+  next()
+})
+
+ReviewSchema.post('findOneAndUpdate', function(doc) {
+  this._previousResId = this._update.reviewContent // resId, userid
+  console.log('DONE SAVING', this._previousResId)
+})
 
 const Review = mongoose.model('review', ReviewSchema);
 
