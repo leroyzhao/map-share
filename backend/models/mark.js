@@ -9,7 +9,9 @@ const GeoSchema = new Schema({
   },
   coordinates: {
     type: [Number],
-    index: "2dsphere"
+    index: "2dsphere",
+    required: [true, 'please provide coordinates of location'],
+    validate: [checkCoordinates, '{PATH} must be of length 2: [lat, lng]']
   }
 });
 
@@ -37,6 +39,10 @@ const MarkSchema = new Schema({
 //   toObject: {virtuals: true},
 //   toJSON: {virtuals: true}
 // })
+
+function checkCoordinates(array) {
+  return array.length === 2
+}
 
 const Mark = mongoose.model('mark', MarkSchema);
 
