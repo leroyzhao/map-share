@@ -66,7 +66,7 @@ module.exports = () => {
     addRestaurant: (restuarantData) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId } = restuarantData
+        let { groupId, geometry } = restuarantData
         if (!groupId) { // check if group id is valid
           reject({"error": "need groupId!"})
           return;
@@ -76,11 +76,13 @@ module.exports = () => {
         console.log('body data: ', restuarantData)
         let refId = ''
 
-        Mark.create({
+        Mark.create({ 
           locationId: new mongoose.Types.ObjectId(),
+          groupId,
+          geometry
         }).then(data => {
           console.log('returned from mark', data)
-          refId = data.id
+          refId = data.id // later populated via id!
           console.log('ID to use: ', data.locationId)
 
           Restaurant.create({
@@ -201,7 +203,6 @@ module.exports = () => {
           return;
         }
 
-        // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
         Restaurant.findOne({locationId}).populate("restaurantReviews").then(data => {
           if (data) {
             console.log('restaurantReviews', data.restaurantReviews)
@@ -284,18 +285,21 @@ module.exports = () => {
       })
     },
 
-    getMarks: (reqBody) => {
+    getMarks: (reqQuery) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId } = reqBody
+        let { groupId, lat, lng } = reqQuery
         if (!groupId) {
-          reject({"error": "include groupId in body"})
+          reject({"error": "include groupId in query"})
           return;
         }
 
+        if (!lat || !lng) {
+        //////////////////////////////////////
         // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
         Group.findById(groupId).populate("groupMarks").then(data => {
           console.log('newdata', data)
+          // return 404 if null!-todo
           console.log('groupmarkers', data.groupMarks)
           resolve(data)
         }).catch(err => {
@@ -310,7 +314,66 @@ module.exports = () => {
         //   console.log('ERROROROOR')
         //   reject(err)
         // });
+        //////////////////////////////////////////////
+      } else {
+        ////////////////////////////////////////
+        coordinates = [
+          parseFloat(reqQuery.lat),
+          parseFloat(reqQuery.lng)
+        ]
+        console.log(coordinates)
+        Mark.aggregate([
+          {
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates
+              },
+              maxDistance: 100000,
+              spherical: true,
+              distanceField: "distance"
+            }
+          },
+          {$match: { groupId: mongoose.Types.ObjectId(groupId) }}
+        ]).then(data => {
+          console.log('got nearest')
+          resolve(data)
+        }).catch(err => {
+          console.log('error fetching nearest')
+          reject(err)
+        })
+        /////////////////////////////////////////
+      }
+
       });
+    },
+
+    // configurable maxDistance?
+    getNearestMarks: (reqQuery) => {
+      return new Promise((resolve, reject) => {
+        coordinates = [
+          parseFloat(reqQuery.lat),
+          parseFloat(reqQuery.lng)
+        ]
+        Mark.aggregate().near({
+          near: {
+            type: "Point",
+            coordinates
+            // coordinates: coordinates.map((coordinate) => {
+            //   return parseFloat(coordinate)
+            // })
+          },
+          maxDistance: 100000,
+          spherical: true,
+          distanceField: "dis"
+        }).then(data => {
+          console.log('got nearest')
+          resolve(data)
+        }).catch(err => {
+          console.log('error fetching nearest')
+          reject(err)
+        })
+      })
     },
 
     getUsers: () => {

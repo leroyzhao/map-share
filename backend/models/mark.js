@@ -1,6 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// create GeoSchema for mark location
+const GeoSchema = new Schema({
+  type: {
+    type: String,
+    default: "Point"
+  },
+  coordinates: {
+    type: [Number],
+    index: "2dsphere"
+  }
+});
+
 // create mark Schema & model
 const MarkSchema = new Schema({
   locationId: {
@@ -14,6 +26,10 @@ const MarkSchema = new Schema({
   restaurantId: {
     type: String,
     //required: [true, 'corresponding restaurantId required for mark']
+  },
+  geometry: {
+    type: GeoSchema,
+    required: [true, "geoSchema required to save mark"]
   },
   groupId: Schema.Types.ObjectId
 })

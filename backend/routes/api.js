@@ -120,7 +120,7 @@ router.delete('/reviews/:id', (req,res,next) => {
 
 // get all marks to populate map
 router.get('/marks', (req,res,next) => {
-  data.getMarks(req.body).then(data => {
+  data.getMarks(req.query).then(data => {
     res.json(data);
   }).catch(err => {
     res.send(err)
