@@ -28,17 +28,17 @@ export class MapContainer extends Component {
   //   return alert("Hello! I am an alert box!");
   // };
 
-  onClose = props => {
-    if (this.props.toggleMarks.showingInfoWindow) {
-      let set = {
-        showingInfoWindow: false,
-        activeMarker: null
-      };
+  // onClose = props => {
+  //   if (this.props.toggleMarks.showingInfoWindow) {
+  //     let set = {
+  //       showingInfoWindow: false,
+  //       activeMarker: null
+  //     };
 
-      this.props.toggleMarker(set);
-    }
-    //this.props.toggleMarker(this.state);
-  };
+  //     this.props.toggleMarker(set);
+  //   }
+  //   //this.props.toggleMarker(this.state);
+  // };
 
   render() {
     // console.log("state: ", this.props.marks);
@@ -46,7 +46,7 @@ export class MapContainer extends Component {
 
     return (
       <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-        <RestaurantDetails />
+        {toggleMarks.status ? <RestaurantDetails /> : null}
         <InfoWindow
           marker={toggleMarks.activeMarker}
           visible={toggleMarks.showingInfoWindow}
@@ -64,8 +64,7 @@ export class MapContainer extends Component {
 const mapDispatchToProps = dispatch => {
   console.log("map dispatch to props from mapcontainer");
   return {
-    marksFetchData: url => dispatch(marksFetchData(url)),
-    toggleMarker: set => dispatch(toggleMarker(set))
+    marksFetchData: url => dispatch(marksFetchData(url))
   };
 };
 

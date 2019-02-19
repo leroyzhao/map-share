@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
+import { addMarker, marksFetchData } from "../../actions/marksActions";
 import {
-  addMarker,
-  marksFetchData,
+  restaurantFetchData,
   toggleMarker
-} from "../../actions/marksActions";
+} from "../../actions/restaurantActions";
 import RestaurantDetails from "../RestaurantComponents/AddRestaurant";
 
 const mapStyles = {
@@ -128,16 +128,13 @@ export class CurrentLocation extends Component {
       let target = this.map;
 
       this.props.marks.map(mark => {
-        let infoWindow = new maps.InfoWindow({
-          content: "info window"
-        });
         let marker = new maps.Marker({
           position: mark.position
         });
 
         const clickOnMarker = () => {
+          this.props.restaurantFetchData(mark);
           this.props.toggleMarker(true);
-          console.log(this.props.markOnClick);
         };
 
         marker.setMap(target);
@@ -193,7 +190,8 @@ const mapDispatchToProps = dispatch => {
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
     addMarker: bool => dispatch(addMarker(bool)),
-    toggleMarker: bool => dispatch(toggleMarker(bool))
+    toggleMarker: bool => dispatch(toggleMarker(bool)),
+    restaurantFetchData: data => dispatch(restaurantFetchData(data))
   };
 };
 

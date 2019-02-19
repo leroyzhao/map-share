@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Form, Field } from "react-final-form";
 
 import "./AddRestaurant.scss";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { addMarker, saveMark } from "../../actions/marksActions";
+import LocationForm from "../Forms/LocationForm/LocationForm";
 
 export class RestaurantDetails extends Component {
   handleClose = () => {
@@ -12,9 +12,17 @@ export class RestaurantDetails extends Component {
     this.props.position.mark.setMap(null);
   };
 
-  handleSave = values => {
+  // handleSave = values => {
+  //   this.props.saveMark(this.props.position);
+  //   this.props.addMarker(false);
+
+  //   return alert(JSON.stringify(values, 0, 2));
+  // };
+
+  handleSubmit = values => {
     this.props.saveMark(this.props.position);
     this.props.addMarker(false);
+
     return alert(JSON.stringify(values, 0, 2));
   };
 
@@ -31,52 +39,7 @@ export class RestaurantDetails extends Component {
             <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form
-              onSubmit={this.handleSave}
-              initialValues={{ employed: true }}
-              subscription={{ submitting: true, pristine: true }}
-            >
-              {({ handleSubmit, reset, submitting, pristine }) => (
-                <form onSubmit={handleSubmit}>
-                  <div>
-                    <label>Restaurant Name</label>
-                    <Field
-                      name="firstName"
-                      component="input"
-                      type="text"
-                      placeholder="First Name"
-                    />
-                  </div>
-                  <div>
-                    <label>Adress</label>
-                    <Field
-                      name="lastName"
-                      component="input"
-                      type="text"
-                      placeholder="Last Name"
-                    />
-                  </div>
-                  <div>
-                    <label>Price Range</label>
-                    <Field name="priceRange" component="select">
-                      <option value="$">$</option>
-                      <option value="$$">$$</option>
-                      <option value="$$$">$$$</option>
-                    </Field>
-                  </div>
-                  <Button variant="secondary" onClick={this.handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={submitting || pristine}
-                    variant="primary"
-                  >
-                    Submit
-                  </Button>
-                </form>
-              )}
-            </Form>
+            <LocationForm onSubmit={this.handleSubmit} />
           </Modal.Body>
         </Modal>
       </div>

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 let marks = [
   {
     id: 1,
@@ -10,13 +12,6 @@ let marks = [
     position: { lat: 43.6425662, lng: -79.3892455 }
   }
 ];
-
-export const toggleMarker = bool => {
-  return {
-    type: "TOGGLE_MARKER",
-    status: bool
-  };
-};
 
 export const addMarker = bool => {
   return {
@@ -53,12 +48,12 @@ export const marksFetchData = url => {
 };
 
 export const saveMark = data => {
-  let test = { position: { lat: data.lat, lng: data.lng } };
-
-  //let newarray = marks.push(test[0]);
+  let num = marks.length;
+  let test = { id: num + 1, position: { lat: data.lat, lng: data.lng } };
 
   return (dispatch, getState) => {
-    console.log(getState());
-    dispatch(marksFetchDataSuccess([...marks, test]));
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", test)
+      .then(res => dispatch(marksFetchDataSuccess([...marks, res.data])));
   };
 };
