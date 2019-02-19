@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { toggleMarker } from "../../actions/marksActions";
+import { toggleMarker } from "../../actions/restaurantActions";
 
 import "./RestaurantDetails.scss";
 
@@ -10,17 +10,19 @@ export class RestaurantDetails extends Component {
   };
 
   render() {
-    const { markOnClick } = this.props;
+    const { markOnClick, getRestaurant } = this.props;
 
     return (
       <div>
-        <div
-          className="detailsContainer"
-          style={
-            markOnClick.status ? { display: "inline" } : { display: "none" }
-          }
-        >
-          <button onClick={this.handleOnClose}>close</button>
+        <div className="detailsContainer">
+          <button
+            type="button"
+            className="btn btn-dark"
+            onClick={this.handleOnClose}
+          >
+            close
+          </button>
+          <div className="container">{JSON.stringify(getRestaurant)}</div>
         </div>
       </div>
     );
@@ -35,7 +37,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    markOnClick: state.marksToggleReducer
+    markOnClick: state.marksToggleReducer,
+    getRestaurant: state.restaurantDetailReducer
   };
 };
 
