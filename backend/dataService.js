@@ -256,14 +256,42 @@ module.exports = () => {
         //       self.invalidate('_createdOn');
         //   }
         // });
-        Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
-          if (data) {
-            console.log('review delete results:', data)
-            resolve({'success': 'review updated'})
-          } else reject('no review with specified id')
-        }).catch(err => {
-          reject(err)
-        })
+
+        if (!mongoose.Types.ObjectId.isValid(newReview.restaurantId) ||
+            !mongoose.Types.ObjectId.isValid(newReview.reviewUser.userId)) {
+
+          reject("invalid restaurant or user Id")
+        }
+
+        Review.findById(reviewId).then(doc => {
+          if (!doc) {
+            reject({"error": "review doesn't exist"}) //TURN INTO 404????????????
+          } else {
+            console.log("OLD DOC:", doc)
+            console.log("NEW DOC:", newReview)
+            if (!( doc.restaurantId.toString() === newReview.restaurantId ) ||
+                !( doc.reviewUser.userId.toString() === newReview.reviewUser.userId)) {
+
+              reject("cannot update restaurant or user Id")
+            } else {
+              doc.reviewContent = newReview.reviewContent
+              doc.reviewRating = newReview.reviewRating
+              doc.save().then(data => {
+                resolve({"success": data})
+              }).catch(err => {
+                reject(err)
+              })
+            }
+          }
+        }).catch(err => reject(err))
+        // Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
+        //   if (data) {
+        //     console.log('review delete results:', data)
+        //     resolve({'success': 'review updated'})
+        //   } else reject('no review with specified id')
+        // }).catch(err => {
+        //   reject(err)
+        // })
       })
     },
 

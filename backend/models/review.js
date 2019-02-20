@@ -62,16 +62,14 @@ const ReviewSchema = new Schema({
 //   }]
 // })
 
-// ReviewSchema.pre('validate', function (next) {
-//   console.log('YEEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO') // current document
+// ReviewSchema.pre('findOneAndUpdate', function(next) {
+//   console.log('validating!!!!!!!!!!!!!!!!!!!!')
+//   console.log('update: ', this.getUpdate())
+//   console.log(this._previousResId)
+//   //if (!this.isModified('password')) return next()
 //   next()
 // })
 
-ReviewSchema.pre('findOneAndUpdate', function(next) {
-  console.log('validating!!!!!!!!!!!!!!!!!!!!')
-  console.log(this._previousResId)
-  next()
-})
 
 ReviewSchema.post('findOneAndUpdate', function(doc) {
   this._previousResId = this._update.reviewContent // resId, userid
