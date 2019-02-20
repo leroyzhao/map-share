@@ -6,12 +6,12 @@ const ReviewSchema = new Schema({
   restaurantId: {
     type: Schema.Types.ObjectId,
     required: [true, 'restarantId is required for review'],
-    set: function(id) {
-      this.previousResId = this.restaurantId;
-      this._conditions = { ...this._conditions, restaurantId:id}
-      console.log(id, "Previous restaurant id: ")
-      return id
-    }
+    // set: function(id) {
+    //   this.previousResId = this.restaurantId;
+    //   this._conditions = { ...this._conditions, restaurantId:id}
+    //   console.log(id, "Previous restaurant id: ")
+    //   return id
+    // }
 
     // validate: {
     //   validator: function(v) {
@@ -71,10 +71,10 @@ const ReviewSchema = new Schema({
 // })
 
 
-ReviewSchema.post('findOneAndUpdate', function(doc) {
-  this._previousResId = this._update.reviewContent // resId, userid
-  console.log('DONE SAVING', this._previousResId)
-})
+// ReviewSchema.post('findOneAndUpdate', function(doc) {
+//   this._previousResId = this._update.reviewContent // resId, userid
+//   console.log('DONE SAVING', this._previousResId)
+// })
 
 const Review = mongoose.model('review', ReviewSchema);
 

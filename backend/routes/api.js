@@ -7,7 +7,7 @@ const router = express.Router();
 // const Review = require('../models/review');
 // const User = require('../models/user');
 
-const dataService = require("../dataService");
+const dataService = require("../dataService_withuserauth");
 
 const data = dataService();
 

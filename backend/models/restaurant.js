@@ -5,8 +5,13 @@ const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema({
   locationId: {
     type: Schema.Types.ObjectId,
-    ref: 'Mark',
+    ref: 'mark',
     required: [true, 'locationId is required to save restaurant']
+  },
+  groupId: {
+    type: Schema.Types.ObjectId,
+    ref: 'group',
+    required: [true, 'groupId required to save restaurant']
   },
   restaurantName: {
     type: String,
