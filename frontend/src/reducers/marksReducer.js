@@ -7,10 +7,10 @@ const initModalState = {
 };
 
 const initMarkerState = {
-  marks: []
+  mark: []
 };
 
-export const marksFetchReducer = (state = initMarkerState.marks, action) => {
+export const marksFetchReducer = (state = initMarkerState.mark, action) => {
   switch (action.type) {
     case "MARKS_FETCH_DATA_SUCCESS":
       return action.marks;
@@ -28,7 +28,7 @@ export const marksToggleReducer = (state = initToggleState.status, action) => {
   }
 };
 
-export const addMarkerReducer = (state = initModalState, action) => {
+export const addMarkerReducer = (state = initMarkerState, action) => {
   switch (action.type) {
     case "ADD_MARKER":
       return action;

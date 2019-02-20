@@ -105,7 +105,7 @@ export class CurrentLocation extends Component {
       this.map = new maps.Map(node, mapConfig);
       let test = this.map;
 
-      maps.event.addListener(test, "click", function(event) {
+      maps.event.addListener(test, "click", function (event) {
         addMark(test, maps, event.latLng);
       });
 
@@ -134,12 +134,11 @@ export class CurrentLocation extends Component {
 
         const clickOnMarker = () => {
           this.props.restaurantFetchData(mark);
-          this.props.toggleMarker(true);
         };
 
         marker.setMap(target);
 
-        marker.addListener("click", function() {
+        marker.addListener("click", function () {
           clickOnMarker();
         });
       });

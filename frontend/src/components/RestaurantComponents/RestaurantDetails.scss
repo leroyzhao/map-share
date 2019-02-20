@@ -3,5 +3,28 @@
   width: 25%;
   height: 100%;
   background-color: whitesmoke;
+  word-wrap: break-word;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+@media only screen and (min-width: 700px) and (max-width: 1050px) {
+  .detailsContainer {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 0px) and (max-width: 700px) {
+  .detailsContainer {
+    width: 100%;
+  }
+}
+
+.btn-custom {
+  position: absolute;
+  right: 0px;
+}
+
+.preview-info-custom {
+  padding: 1rem;
+  background-color: rgb(10, 152, 247);
 }

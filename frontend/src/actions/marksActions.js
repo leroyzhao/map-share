@@ -3,12 +3,20 @@ import axios from "axios";
 let marks = [
   {
     id: 1,
-    nameTag: "Jam3 Toronto",
+    restaurantName: "Jam3 Toronto",
+    address: "101 testing road",
+    review: "testing review bla bla bla bla",
+    priceRange: "$$",
+    img: "https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png",
     position: { lat: 43.6472857, lng: -79.3925776 }
   },
   {
     id: 2,
-    nameTag: "Your position",
+    restaurantName: "Your position",
+    address: "101 testing road",
+    review: "testing review bla bla bla bla",
+    priceRange: "$$",
+    img: "https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png",
     position: { lat: 43.6425662, lng: -79.3892455 }
   }
 ];
@@ -48,8 +56,9 @@ export const marksFetchData = url => {
 };
 
 export const saveMark = data => {
+  console.log(data);
   let num = marks.length;
-  let test = { id: num + 1, position: { lat: data.lat, lng: data.lng } };
+  let test = { id: num + 1, img: "https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png", ...data };
 
   return (dispatch, getState) => {
     axios

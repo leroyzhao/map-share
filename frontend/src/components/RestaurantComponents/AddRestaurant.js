@@ -20,10 +20,12 @@ export class RestaurantDetails extends Component {
   // };
 
   handleSubmit = values => {
-    this.props.saveMark(this.props.position);
+    let data = {
+      ...values,
+      position: { lat: this.props.position.lat, lng: this.props.position.lng }
+    };
+    this.props.saveMark(data);
     this.props.addMarker(false);
-
-    return alert(JSON.stringify(values, 0, 2));
   };
 
   render() {

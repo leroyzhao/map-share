@@ -1,6 +1,8 @@
 import React from "react";
 import { reduxForm, Field } from "redux-form";
 
+import "./LocationForm.scss";
+
 const validate = val => {
   const errors = {};
 
@@ -14,7 +16,7 @@ const validate = val => {
     errors.priceRange = "Required";
   }
   if (!val.review) {
-    errors.review = "you must write a review";
+    errors.review = "You must write a review...";
   }
 
   return errors;
@@ -22,19 +24,19 @@ const validate = val => {
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <div className="control">
-    <label className="field">{label}</label>
+    <label className="title">{label}</label>
     {renderOnType(input, type)}
     {touched && (error && <span>{error}</span>)}
   </div>
 );
 
-const renderOnType = (input, type) => {
+const renderOnType = (name, type) => {
   switch (type) {
     case "text":
-      return <input className="input" {...input} type={type} />;
+      return <input className="form-control" {...name} type={type} />;
     case "select":
       return (
-        <select {...input}>
+        <select className="form-control" {...name}>
           <option />
           <option value="$">$</option>
           <option value="$$">$$</option>
@@ -42,8 +44,34 @@ const renderOnType = (input, type) => {
         </select>
       );
     case "textarea":
-      return <textarea {...input} />;
+      return <textarea className="form-control" {...name} rows="3" />;
+    case "radio":
+      return <div className="rating-container">{renderRating(name, type)}</div>;
+    default:
+      return <div />;
   }
+};
+
+const renderRating = (name, type) => {
+  let rating = [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5];
+  let size = rating.length;
+  let children = [];
+  let rc;
+
+  for (let i = 0; i < size; i++) {
+    children.push(
+      <>
+        <input type={type} id={rating[i]} {...name} value={rating[i]} />
+        <label
+          className={Number.isInteger(Number(rating[i])) ? "full" : "half"}
+          for={rating[i]}
+        />
+      </>
+    );
+  }
+  rc = <div className="rating">{children}</div>;
+
+  return rc;
 };
 
 const LocationForm = props => {
@@ -80,15 +108,26 @@ const LocationForm = props => {
         </div>
 
         <div className="field">
-          <div className="control">
-            <label className="label">Review</label>
-            <Field name="review" component={renderField} type="textarea" />
-          </div>
+          <Field
+            name="rating"
+            component={renderField}
+            label="Rating"
+            type="radio"
+          />
+        </div>
+
+        <div className="field">
+          <Field
+            name="review"
+            component={renderField}
+            label="Review"
+            type="textarea"
+          />
         </div>
 
         <div className="field">
           <div className="control">
-            <button className="button is-link">Save</button>
+            <button className="btn btn-primary">Save</button>
           </div>
         </div>
       </form>
