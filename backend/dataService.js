@@ -59,16 +59,19 @@ module.exports = () => {
       });
     },
 
-    // add mark and restaurant with common locationId
+    //check groupid exists first?
 
     //PREVENT ADDING DUPLICATE??
     addRestaurant: (restuarantData) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId, geometry } = restuarantData
-        if (!groupId) { // check if group id is valid
-          reject({"error": "need groupId!"})
+        let { groupId, geometry, restaurantName, restaurantLocation, userId } = restuarantData
+        if (!(groupId || geometry || restaurantName || restaurantLocation || userId)) { // check if group id is valid
+          reject({"error": "missing fields, need groupId, geometry, restaurantName, restaurantLocation, userId"})
           return;
+        }
+        if (!mongoose.Types.ObjectId.isValid(groupId) || !mongoose.Types.ObjectId.isValid(userId)) {
+          reject({"error": "either groupId or userId cannot be converted to valid ObjectId"})
         }
 
         console.log(groupId)
@@ -97,7 +100,7 @@ module.exports = () => {
                 { $push: { groupMarks: refId } },//data.locationId
                 { runValidators: true }
               ).then(data => {
-                console.log('returned from adding marker to group', data)
+                console.log('returned from adding marker to group, if null then group d.n.e', data)
               }).catch(err => {
                 console.log('couldnt add marker to group')
                 reject(err)
@@ -147,7 +150,7 @@ module.exports = () => {
                 if (data.deletedCount === 1) {
                   markDeleted = true
                   if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
-                  ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY////////////
+                  ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY, delete all corresponding reviews////////////
                   else errorMessage = 'mark deleted, restaurant with specified id does not exist'
                 } else {
                   if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'

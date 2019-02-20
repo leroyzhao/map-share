@@ -7,10 +7,8 @@ const GroupSchema = new Schema({
     type: String,
     required: [true, 'groupName field is required']
   },
-  groupMembers: [{
-    type: String,
-  }],
-  groupMarks: [{ type: Schema.Types.ObjectId, ref: "mark" }]
+  groupMarks: [{ type: Schema.Types.ObjectId, ref: "mark" }],
+  groupMembers: [{ type: Schema.Types.ObjectId, ref: "user" }]
 })
 
 GroupSchema.virtual('groupId').get(function() { return this._id; });
