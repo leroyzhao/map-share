@@ -515,7 +515,14 @@ module.exports = () => {
             groupMembers: [groupData.userId]   ///////////////////add initial groupmember
           }).then(data => {
             console.log('groupId: ', data.groupId)
-            resolve(data)
+
+            doc.userGroups.push(data.groupId)
+            doc.save().then(d => {
+              resolve(data)
+            }).catch(err => {
+              reject({"group created, but couldn't add group to user": err})
+            })
+
           }).catch(err => {
             console.log(err)
             reject(err)
