@@ -62,27 +62,27 @@ module.exports = () => {
     //check groupid exists first?
 
     //PREVENT ADDING DUPLICATE??
-    addRestaurant: (restuarantData) => {
+    addRestaurant: (restaurantData) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId, geometry, restaurantName, restaurantLocation, userId } = restuarantData
-        if (!(groupId || geometry || restaurantName || restaurantLocation || userId)) { // check if group id is valid
+        let { groupId, geometry, restaurantName, restaurantLocation, userId } = restaurantData
+        if (!(groupId && geometry && restaurantName && restaurantLocation && userId)) { // check if group id is valid
           reject({"error": "missing fields, need groupId, geometry, restaurantName, restaurantLocation, userId"})
           return;
         }
         if (!mongoose.Types.ObjectId.isValid(groupId) || !mongoose.Types.ObjectId.isValid(userId)) {
           reject({"error": "either groupId or userId cannot be converted to valid ObjectId"})
+          return
         }
 
         Group.findById(groupId).then(doc => {
           if (!doc) {
             reject({"error": "group doesn't exist"}) //cannot complete operation code?
-          } else if (!(userId in doc.groupMembers)) {
+          } else if (!doc.groupMembers.some(id => {return id.equals(userId)})) {
             reject({"error": "user doesn't belong to group"}) 
           } else {
-
             console.log(groupId)
-            console.log('body data: ', restuarantData)
+            console.log('body data: ', restaurantData)
             let refId = ''
 
             Mark.create({ 
@@ -95,7 +95,7 @@ module.exports = () => {
               console.log('ID to use: ', data.locationId)
 
               Restaurant.create({
-                ...restuarantData,
+                ...restaurantData,
                 locationId: data.locationId
               }).then(data => {
                 console.log('returned from restaurant: ', data)
@@ -103,12 +103,12 @@ module.exports = () => {
                 // if (groupId) {
 
                   doc.groupMarks.push(refId)
-                  doc.groupMembers.push(userId)
                   doc.save().then(data => {
                     console.log('returned from adding marker&user to group', data)
                   }).catch(err => {
                     console.log('couldnt add marker/user to group')
                     reject(err)
+                    
                   })
 
                 // } else {
@@ -234,11 +234,15 @@ module.exports = () => {
         // format creation body first?
         // check if provided userId/restaurantId is valid first?
 
-        if (!reviewData.restaurantId) reject("restaurantId required")
+        if (!reviewData.restaurantId) {
+          reject("restaurantId required")
+          return
+        }
 
-        Restaurant.find({locationId: reviewData.restaurantId}).then(doc => {
+        Restaurant.findOne({locationId: reviewData.restaurantId}).then(doc => {
+          console.log(doc)
           if (!doc) {
-            reject({"error": "restaurant doesn't exist"})
+            reject("restaurant doesn't exist")
             return
           }
 
@@ -337,6 +341,7 @@ module.exports = () => {
 
         let { groupId, lat, lng, userId } = reqQuery
         if (!groupId) {
+          
           reject({"error": "include groupId in query"})
           return;
         }
@@ -349,7 +354,7 @@ module.exports = () => {
 
           if (!lat || !lng) {
             // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
-            data.populate("groupMarks").then(data => {
+            Group.findById(groupId).populate("groupMarks").then(data => {
               console.log('newdata', data)
               // return 404 if null!-todo
               console.log('groupmarkers', data.groupMarks)
@@ -469,7 +474,7 @@ module.exports = () => {
     
     getGroups: () => {
       return new Promise((resolve, reject) => {
-        Group.find().populate("groupMarks")
+        Group.find().populate("groupMarks") //.populate("groupMembers")
         .then(data => {
           console.log('data retrieved?', data)
           resolve(data)
