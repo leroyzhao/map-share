@@ -8,6 +8,7 @@ let marks = [
     review: "testing review bla bla bla bla",
     priceRange: "$$",
     img: "https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png",
+    rating: "4.5",
     position: { lat: 43.6472857, lng: -79.3925776 }
   },
   {
@@ -17,6 +18,7 @@ let marks = [
     review: "testing review bla bla bla bla",
     priceRange: "$$",
     img: "https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png",
+    rating: "3.67",
     position: { lat: 43.6425662, lng: -79.3892455 }
   }
 ];

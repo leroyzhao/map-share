@@ -3,6 +3,9 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 import { marksFetchData, toggleMarker } from "../../actions/marksActions";
+
+import './MapContainer.scss'
+
 import CurrentLocation from "../CurrentLocation/CurrentLocation";
 import RestaurantDetails from "../RestaurantComponents/RestaurantDetails";
 
@@ -46,7 +49,13 @@ export class MapContainer extends Component {
 
     return (
       <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-        {toggleMarks.status ? <RestaurantDetails /> : null}
+        {toggleMarks.status ?
+          <div className='detailsContainer container-fluid'>
+            <RestaurantDetails />
+          </div>
+          :
+          <div className="slideOut"></div>
+        }
         <InfoWindow
           marker={toggleMarks.activeMarker}
           visible={toggleMarks.showingInfoWindow}

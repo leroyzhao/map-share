@@ -14,33 +14,61 @@ export class RestaurantDetails extends Component {
     return (
       <div>
         {console.log(getRestaurant.data)}
-        <div className="detailsContainer container-fluid">
-          <div className="row">
-            <div className="col-12 p-0">
-              <img className="img-fluid" src={getRestaurant.data.img} alt="" />
-            </div>
-            <div className="btn-custom">
-              <button
-                type="button"
-                className="btn btn-dark"
-                onClick={this.handleOnClose}
-              >
-                close
+        <div className="row">
+          <div className="col-12 p-0">
+            <img className="img-fluid" src={getRestaurant.data.img} alt="" />
+          </div>
+          <div className="btn-custom">
+            <button
+              type="button"
+              className="btn btn-dark"
+              onClick={this.handleOnClose}
+            >
+              close
               </button>
+          </div>
+        </div>
+
+        <div className="row preview-info-custom">
+          <div className="col-8">
+            {getRestaurant.data.restaurantName}
+          </div>
+          <div className="col-4">
+            {getRestaurant.data.priceRange}
+          </div>
+          <div className="col-12">
+            {getRestaurant.data.address}
+          </div>
+        </div>
+
+        <div className="row rating">
+          <div className="col-12">
+            *---- RATING ----*
             </div>
+          <div className="col-12">
+            <div className="stars">
+              <div className="empty-stars"></div>
+              <div className="full-stars" style={{ width: `calc(100% * ${getRestaurant.data.rating / 5})` }}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row review">
+          <div className="col-12">
+            Review summary
+              <hr />
           </div>
 
-          <div className="row preview-info-custom">
-            <div className="col-8">
-              {getRestaurant.data.restaurantName}
+          <div className="col-2">
+            pic
             </div>
-            <div className="col-4">
-              {getRestaurant.data.priceRange}
-            </div>
-            <div className="col-12">
-              {getRestaurant.data.address}
-            </div>
+          <div className="col-10 pl-0">
+            {getRestaurant.data.review}
+            {getRestaurant.data.review}
+            {getRestaurant.data.review}
+            {getRestaurant.data.review}
           </div>
+
         </div>
       </div>
     );
