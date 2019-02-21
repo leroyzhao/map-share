@@ -63,7 +63,7 @@ router.put('/restaurants/:id', (req,res,next) => {
 router.delete('/restaurants/:id', (req,res,next) => {
   console.log('delete restaurant with id: ', req.params.id);
 
-  data.deleteRestaurantById(req.params.id).then(data => {
+  data.deleteRestaurantById(req.params.id, req.body).then(data => {
     res.status(200).json(data)
   }).catch(err => {
     res.status(400).send({'error': err})
@@ -197,7 +197,11 @@ router.post('/groups', (req,res,next) => {
 
 //list members of group
 router.get('/groups/:groupId', (req,res,next) => {
-  res.send({type: 'GET members of specific group'});
+  data.getGroup(req.params.groupId).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send({"error": err})
+  })
 });
 
 ///////////////////////////////////////////////////////////////////
