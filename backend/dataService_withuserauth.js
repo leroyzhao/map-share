@@ -288,16 +288,21 @@ module.exports = () => {
         //       self.invalidate('_createdOn');
         //   }
         // });
+        let { restaurantId, reviewUser, reviewContent, reviewRating } = newReview
 
-        if (!mongoose.Types.ObjectId.isValid(newReview.restaurantId) ||
-            !mongoose.Types.ObjectId.isValid(newReview.reviewUser.userId)) {
-
-          reject("invalid restaurant or user Id")
+        if (!(restaurantId && reviewContent && reviewRating && reviewUser && reviewUser.userId)) {
+          reject("include restaurantId, reviewContent, reviewRating, reviewUser, and reviewUser.userId")
+          return
+        }
+        else if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
+                   mongoose.Types.ObjectId.isValid(reviewUser.userId))) {
+          reject("provide valid restaurantId and userId")
+          return
         }
 
         Review.findById(reviewId).then(doc => {
           if (!doc) {
-            reject({"error": "review doesn't exist"}) //TURN INTO 404????????????
+            reject("review doesn't exist") //TURN INTO 404????????????
             return
           }
 
