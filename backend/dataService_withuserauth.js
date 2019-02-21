@@ -498,6 +498,14 @@ module.exports = () => {
         });
       });
     },
+
+    getGroup: (groupId) => {
+      return new Promise((resolve, reject) => {
+        Group.findById(groupId).then(data => {
+          resolve(data)
+        }).catch(err => resolve(err))
+      })
+    },
     
     addGroup: (groupData) => {
       return new Promise((resolve, reject) => {
