@@ -178,18 +178,74 @@ module.exports = () => {
       })
     },
 
-    updateRestaurantById: (locationId, newData) => {
+    // updateRestaurantById: (locationId, newData) => {
+    //   return new Promise((resolve, reject) => {
+    //     console.log('running?')
+
+    //     Restaurant.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
+    //       console.log('successfull update, this is old: ', data);
+    //       resolve(data)
+    //     }).catch(err => {
+    //       console.log('problem??', err.message)
+    //       reject(err.message)
+    //     });
+
+    //   })
+    // },
+    updateRestaurantById: (restaurantId, newData) => {
       return new Promise((resolve, reject) => {
-        console.log('running?')
 
-        Restaurant.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
-          console.log('successfull update, this is old: ', data);
-          resolve(data)
-        }).catch(err => {
-          console.log('problem??', err.message)
-          reject(err.message)
-        });
+        // check if restaurant&user id match! then update. otherwise throw error
 
+        let { userId, restaurantName, restaurantLocation, restaurantCuisine, restaurantPriceRange } = newData
+
+        if (!(userId && restaurantName && restaurantLocation)) {
+          reject("body requires userId, restaurantName, restaurantLocation")
+          return
+        }
+        else if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
+                   mongoose.Types.ObjectId.isValid(userId))) {
+          reject("provide valid userId in body, valid locationId in URL")
+          return
+        }
+
+        Restaurant.findOne({locationId: restaurantId}).then(doc => {
+          console.log(doc)
+          if (!doc) {
+            reject("restaurant doesn't exist") //TURN INTO 404????????????
+            return
+          }
+
+          console.log("OLD DOC:", doc)
+          console.log("NEW DOC:", newData)
+          if (newData.locationId || newData.groupId || newData.restaurantReviews) {
+            reject("cannot update restaurant locationId or groupId")
+          } else {
+
+            Group.findById(doc.groupId).then(gd => {
+              if (gd.groupMembers.some(id => {return id.equals(userId)})) {
+                doc.restaurantName = restaurantName
+                doc.restaurantLocation = restaurantLocation
+                doc.save().then(data => {
+                  resolve({"success": data})
+                }).catch(err => {
+                  reject(err)
+                })
+              } else {
+                reject("user does not belong to this restaurant's group")
+              }
+            }).catch(err => {console.log('2'); reject(err); return})
+            
+          }
+        }).catch(err => {console.log(err);reject(err)})
+        // Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
+        //   if (data) {
+        //     console.log('review delete results:', data)
+        //     resolve({'success': 'review updated'})
+        //   } else reject('no review with specified id')
+        // }).catch(err => {
+        //   reject(err)
+        // })
       })
     },
 
