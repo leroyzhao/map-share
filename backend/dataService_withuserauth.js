@@ -134,47 +134,79 @@ module.exports = () => {
 
 
     // delete restaurant and corresponding mark
-    deleteRestaurantById: (locationId) => {
+    deleteRestaurantById: (locationId, reqBody) => {
       return new Promise((resolve, reject) => {
         let errorMessage = ''
         let restaurantDeleted = false
-        let markDeleted = false
+        if (!reqBody.userId) reject("provide userId")
+
+        Restaurant.findOne({ locationId }).populate('groupId').then(doc => {
+          if (!doc) {
+            reject("restaurant doesn't exist") //error code?
+            return
+          }
+          console.log('restaurant doc: ', doc)
+          if (!doc.groupId.groupMembers.some(id => {return id.equals(reqBody.userId)})) {
+            reject("user does not belong to this restaurant's group")
+            return
+          }
+
+          ///delete marks and reviews?
+          Mark.deleteOne({ locationId }).then(markData => {
+            console.log('markData: ', markData)
+          }).catch(err => {
+            console.log("error deleting markData", err)
+          })
+
+          Review.deleteMany({ restaurantId: locationId }).then(reviewData => {
+            console.log('reviewData: ', reviewData)
+          }).catch(err => {
+            console.log("error deleting reviewData", err)
+          })
+
+          doc.remove().then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+
+        }).catch(err => {console.log(err); reject(err)})
 
         // delete restaurant
-        Restaurant.deleteOne({ locationId })
-          .exec()
-          .then(data => {
-            console.log("restaraunt deleted count: ", data.deletedCount)
+        // Restaurant.deleteOne({ locationId })
+        //   .exec()
+        //   .then(data => {
+        //     console.log("restaraunt deleted count: ", data.deletedCount)
 
-            if (data.deletedCount === 1) {
-              restaurantDeleted = true
-            }
+        //     if (data.deletedCount === 1) {
+        //       restaurantDeleted = true
+        //     }
 
-            // delete mark
-            Mark.deleteOne({ locationId })
-              .exec()
-              .then(data => {
-                console.log('mark deleted count: ', data.deletedCount)
-                if (data.deletedCount === 1) {
-                  markDeleted = true
-                  if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
-                  ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY, delete all corresponding reviews////////////
-                  else errorMessage = 'mark deleted, restaurant with specified id does not exist'
-                } else {
-                  if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'
-                  else errorMessage = 'no mark or restaurant with specified id'
-                }
-                reject(errorMessage)
-              })
-              .catch(err => {
-                console.log('fail')
-                reject(err.message)
-            });
+        //     // delete mark
+        //     Mark.deleteOne({ locationId })
+        //       .exec()
+        //       .then(data => {
+        //         console.log('mark deleted count: ', data.deletedCount)
+        //         if (data.deletedCount === 1) {
+        //           markDeleted = true
+        //           if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
+        //           ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY, delete all corresponding reviews////////////
+        //           else errorMessage = 'mark deleted, restaurant with specified id does not exist'
+        //         } else {
+        //           if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'
+        //           else errorMessage = 'no mark or restaurant with specified id'
+        //         }
+        //         reject(errorMessage)
+        //       })
+        //       .catch(err => {
+        //         console.log('fail')
+        //         reject(err.message)
+        //     });
 
-          }).catch(err => {
-            console.log('failed?')
-            reject(err.message)
-          });
+        //   }).catch(err => {
+        //     console.log('failed?')
+        //     reject(err.message)
+        //   });
       })
     },
 
@@ -192,6 +224,7 @@ module.exports = () => {
 
     //   })
     // },
+
     updateRestaurantById: (restaurantId, newData) => {
       return new Promise((resolve, reject) => {
 
