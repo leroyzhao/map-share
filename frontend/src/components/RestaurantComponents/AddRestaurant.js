@@ -38,7 +38,7 @@ export class RestaurantDetails extends Component {
           dialogClassName="dialog"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>Add Location</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <LocationForm onSubmit={this.handleSubmit} />
