@@ -233,18 +233,24 @@ module.exports = () => {
 
         // format creation body first?
         // check if provided userId/restaurantId is valid first?
+        let { restaurantId, reviewUser} = reviewData
 
-        if (!reviewData.restaurantId) {
-          reject("restaurantId required")
+        if (!(restaurantId && reviewUser && reviewUser.userId)) {
+          reject("include restaurantId, reviewUser, and reviewUser.userId")
           return
         }
 
-        Restaurant.findOne({locationId: reviewData.restaurantId}).then(doc => {
-          console.log(doc)
+        Restaurant.findOne({locationId: reviewData.restaurantId}).populate("groupId").then(doc => {
+          console.log('heres doc', doc)
           if (!doc) {
             reject("restaurant doesn't exist")
             return
+          } else if (!doc.groupId.groupMembers.some(id => {return id.equals(reviewData.reviewUser.userId)})) {
+            reject("user doesn't belong to group") 
+            return
           }
+          console.log('user belongs to group: ', doc.groupId.groupMembers.some(id => {return id.equals(reviewData.reviewUser.userId)}))
+          //ONLY CREATE IF USER A PART OF GROUP
 
           Review.create({
             ...reviewData
@@ -252,8 +258,8 @@ module.exports = () => {
             console.log('returned from review creation', data, data.id)
   
             doc.restaurantReviews.push(data.id)
-            doc.save().then(data => {
-              console.log('returned from adding review to restaurant', data)
+            doc.save().then(d => {
+              console.log('returned from adding review to restaurant', d)
               resolve(data)
             }).catch(err => {
               console.log('couldnt add review to restuarant')
@@ -264,7 +270,10 @@ module.exports = () => {
             reject(err)
           });
 
-        }).catch(err => reject(err))
+        }).catch(err => {
+          console.log("error in findone", err)
+          reject(err)
+        })
       })
     },
 
