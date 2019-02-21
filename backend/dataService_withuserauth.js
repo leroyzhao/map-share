@@ -151,7 +151,8 @@ module.exports = () => {
             return
           }
 
-          ///delete marks and reviews?
+          // delete mark, reviews, mark from groupmarks
+
           Mark.deleteOne({ locationId }).then(markData => {
             console.log('markData: ', markData)
           }).catch(err => {
@@ -164,6 +165,15 @@ module.exports = () => {
             console.log("error deleting reviewData", err)
           })
 
+          Group.updateOne(
+            {_id: doc.groupId},
+            { $pull: {groupMarks: locationId } }
+          ).then(yay => {
+            console.log("updated group? ", yay)
+          }).catch(err => {
+            console.log('failed to update gorup', err)
+          })
+
           doc.remove().then(data => {
             resolve(data)
           }).catch(err => {
@@ -172,58 +182,8 @@ module.exports = () => {
 
         }).catch(err => {console.log(err); reject(err)})
 
-        // delete restaurant
-        // Restaurant.deleteOne({ locationId })
-        //   .exec()
-        //   .then(data => {
-        //     console.log("restaraunt deleted count: ", data.deletedCount)
-
-        //     if (data.deletedCount === 1) {
-        //       restaurantDeleted = true
-        //     }
-
-        //     // delete mark
-        //     Mark.deleteOne({ locationId })
-        //       .exec()
-        //       .then(data => {
-        //         console.log('mark deleted count: ', data.deletedCount)
-        //         if (data.deletedCount === 1) {
-        //           markDeleted = true
-        //           if (restaurantDeleted) resolve({'success': 'restuarant and mark deleted'})
-        //           ///////////////DELETE MARKER OID FROM GROUPMARKERS ARRAY, delete all corresponding reviews////////////
-        //           else errorMessage = 'mark deleted, restaurant with specified id does not exist'
-        //         } else {
-        //           if (restaurantDeleted) errorMessage = 'restuarant deleted, mark with specified id does not exist'
-        //           else errorMessage = 'no mark or restaurant with specified id'
-        //         }
-        //         reject(errorMessage)
-        //       })
-        //       .catch(err => {
-        //         console.log('fail')
-        //         reject(err.message)
-        //     });
-
-        //   }).catch(err => {
-        //     console.log('failed?')
-        //     reject(err.message)
-        //   });
       })
     },
-
-    // updateRestaurantById: (locationId, newData) => {
-    //   return new Promise((resolve, reject) => {
-    //     console.log('running?')
-
-    //     Restaurant.findOneAndUpdate({ locationId }, newData, {runValidators:true}).then((data) => {
-    //       console.log('successfull update, this is old: ', data);
-    //       resolve(data)
-    //     }).catch(err => {
-    //       console.log('problem??', err.message)
-    //       reject(err.message)
-    //     });
-
-    //   })
-    // },
 
     updateRestaurantById: (restaurantId, newData) => {
       return new Promise((resolve, reject) => {
