@@ -78,7 +78,7 @@ module.exports = () => {
           if (!doc) {
             reject({"error": "group doesn't exist"}) //cannot complete operation code?
           } else if (!(userId in doc.groupMembers)) {
-            reject({"error": "user doens't belong to group"}) 
+            reject({"error": "user doesn't belong to group"}) 
           } else {
 
             console.log(groupId)
@@ -235,9 +235,10 @@ module.exports = () => {
         // check if provided userId/restaurantId is valid first?
 
         if (!reviewData.restaurantId) reject("restaurantId required")
+
         Restaurant.find({locationId: reviewData.restaurantId}).then(doc => {
           if (!doc) {
-            reject({"error": "review doesn't exist"})
+            reject({"error": "restaurant doesn't exist"})
             return
           }
 
@@ -247,12 +248,7 @@ module.exports = () => {
             console.log('returned from review creation', data, data.id)
   
             doc.restaurantReviews.push(data.id)
-            doc.save()
-            Restaurant.findOneAndUpdate(
-              { locationId: data.restaurantId },
-              { $push: { restaurantReviews: data.id } },//data.locationId
-              { runValidators: true }
-            ).then(data => {
+            doc.save().then(data => {
               console.log('returned from adding review to restaurant', data)
               resolve(data)
             }).catch(err => {
@@ -289,22 +285,24 @@ module.exports = () => {
         Review.findById(reviewId).then(doc => {
           if (!doc) {
             reject({"error": "review doesn't exist"}) //TURN INTO 404????????????
-          } else {
-            console.log("OLD DOC:", doc)
-            console.log("NEW DOC:", newReview)
-            if (!( doc.restaurantId.toString() === newReview.restaurantId ) ||
-                !( doc.reviewUser.userId.toString() === newReview.reviewUser.userId)) {
+            return
+          }
 
-              reject("cannot update restaurant or user Id")
-            } else {
-              doc.reviewContent = newReview.reviewContent
-              doc.reviewRating = newReview.reviewRating
-              doc.save().then(data => {
-                resolve({"success": data})
-              }).catch(err => {
-                reject(err)
-              })
-            }
+          console.log("OLD DOC:", doc)
+          console.log("NEW DOC:", newReview)
+          if (!( doc.restaurantId.toString() === newReview.restaurantId ) ||
+              !( doc.reviewUser.userId.toString() === newReview.reviewUser.userId)) {
+
+            reject("cannot update restaurant or user Id")
+          } else {
+            doc.reviewContent = newReview.reviewContent
+            doc.reviewRating = newReview.reviewRating
+            doc.save().then(data => {
+              resolve({"success": data})
+            }).catch(err => {
+              reject(err)
+            })
+            
           }
         }).catch(err => reject(err))
         // Review.findByIdAndUpdate(reviewId, newReview, {runValidators: true}).then(data => {
@@ -337,62 +335,64 @@ module.exports = () => {
     getMarks: (reqQuery) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId, lat, lng } = reqQuery
+        let { groupId, lat, lng, userId } = reqQuery
         if (!groupId) {
           reject({"error": "include groupId in query"})
           return;
         }
 
-        if (!lat || !lng) {
-        //////////////////////////////////////
-        // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
-        Group.findById(groupId).populate("groupMarks").then(data => {
-          console.log('newdata', data)
-          // return 404 if null!-todo
-          console.log('groupmarkers', data.groupMarks)
-          resolve(data)
+        Group.findById(groupId).then(data => {
+          if (!userId in data.groupMembers) {
+            reject("user is not part of this group")
+            return
+          }
+
+          if (!lat || !lng) {
+            // WHY NOT MARK.FIND({ groupId })? (add groupid field in addRestaurant in dataService)
+            data.populate("groupMarks").then(data => {
+              console.log('newdata', data)
+              // return 404 if null!-todo
+              console.log('groupmarkers', data.groupMarks)
+              resolve(data)
+            }).catch(err => {
+              reject({"cannot populate??": err})
+            })
+
+          } else {
+            ////////////////////////////////////////
+            coordinates = [
+              parseFloat(lat),
+              parseFloat(lng)
+            ]
+            console.log(coordinates)
+            Mark.aggregate([
+              {
+                $geoNear: {
+                  near: {
+                    type: "Point",
+                    coordinates
+                  },
+                  maxDistance: 100000,
+                  spherical: true,
+                  distanceField: "distance"
+                }
+              },
+              {$match: { groupId: mongoose.Types.ObjectId(groupId) }}
+            ]).then(data => {
+              console.log('got nearest')
+              resolve(data)
+            }).catch(err => {
+              console.log('error fetching nearest')
+              reject(err)
+            })
+            /////////////////////////////////////////
+          }
+
         }).catch(err => {
           console.log('error', err)
           reject(err)
         });
 
-        // Mark.find({ groupId })
-        // .then(data => {
-        //   resolve(data)
-        // }).catch(err => {
-        //   console.log('ERROROROOR')
-        //   reject(err)
-        // });
-        //////////////////////////////////////////////
-      } else {
-        ////////////////////////////////////////
-        coordinates = [
-          parseFloat(reqQuery.lat),
-          parseFloat(reqQuery.lng)
-        ]
-        console.log(coordinates)
-        Mark.aggregate([
-          {
-            $geoNear: {
-              near: {
-                type: "Point",
-                coordinates
-              },
-              maxDistance: 100000,
-              spherical: true,
-              distanceField: "distance"
-            }
-          },
-          {$match: { groupId: mongoose.Types.ObjectId(groupId) }}
-        ]).then(data => {
-          console.log('got nearest')
-          resolve(data)
-        }).catch(err => {
-          console.log('error fetching nearest')
-          reject(err)
-        })
-        /////////////////////////////////////////
-      }
 
       });
     },
@@ -484,18 +484,26 @@ module.exports = () => {
       return new Promise((resolve, reject) => {
         console.log('new groupData: ', groupData)
 
-        // format creation body first?
-        // create. if exists, return error?
-        Group.create({
-          ...groupData,
-          groupMembers: [groupData.userId]   ///////////////////add initial groupmember
-        }).then(data => {
-          console.log('groupId: ', data.groupId)
-          resolve(data)
-        }).catch(err => {
-          console.log(err)
-          reject(err)
-        });
+        if (!groupData.userId) reject("need userId field")
+        User.findById(groupData.userId).then(doc => {
+          if (!doc) {
+            reject("user doesn't exist")
+            return
+          }
+
+          Group.create({
+            ...groupData,
+            groupMembers: [groupData.userId]   ///////////////////add initial groupmember
+          }).then(data => {
+            console.log('groupId: ', data.groupId)
+            resolve(data)
+          }).catch(err => {
+            console.log(err)
+            reject(err)
+          });
+
+        }).catch(err => reject(err))
+
       })
     },
 
