@@ -30,7 +30,7 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
 app.use(bodyParser.json())
 
 // allow CORS
-app.user(cors())
+app.use(cors())
 
 // initialize routes
 app.use('/api', routes);
