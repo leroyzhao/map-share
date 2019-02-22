@@ -1,5 +1,6 @@
 const HTTP_PORT = process.env.PORT || 3000;
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const routes = require('./routes/api');
@@ -27,6 +28,9 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
 
 // body parsing middleware
 app.use(bodyParser.json())
+
+// allow CORS
+app.user(cors())
 
 // initialize routes
 app.use('/api', routes);
