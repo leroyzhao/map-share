@@ -176,7 +176,6 @@ export class CurrentLocation extends Component {
     return (
       <div>
         {this.loadMarker()}
-        <RestaurantDetails position={this.state.newMarkPosition} />
         <div style={style} ref="map">
           Loading map...
         </div>
