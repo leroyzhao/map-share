@@ -25,10 +25,10 @@ const MarkSchema = new Schema({
     long: Number,
     lat: Number,
   },
-  restaurantId: {
-    type: String,
-    //required: [true, 'corresponding restaurantId required for mark']
-  },
+  // restaurantId: {
+  //   type: String,
+  //   //required: [true, 'corresponding restaurantId required for mark']
+  // },
   geometry: {
     type: GeoSchema,
     required: [true, "geoSchema required to save mark"]

@@ -113,11 +113,19 @@ router.delete('/reviews/:id', (req,res,next) => {
 
 // get all marks to populate map
 router.get('/marks', (req,res,next) => {
-  data.getMarks(req.query).then(data => {
-    res.json(data);
-  }).catch(err => {
-    res.send(err)
-  })
+  if (req.query.priceRange) {
+    data.getMarksByPriceRange(req.query).then(data => {
+      res.json(data);
+    }).catch(err => {
+      res.send(err)
+    })
+  } else {
+    data.getMarks(req.query).then(data => {
+      res.json(data);
+    }).catch(err => {
+      res.send(err)
+    })
+  }
 });
 
 /////////////////////////USER///////////////////////////////
