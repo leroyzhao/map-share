@@ -2,10 +2,6 @@ const initToggleState = {
   status: false
 };
 
-const initModalState = {
-  showModal: false //Hides or the shows modalWindow
-};
-
 const initMarkerState = {
   mark: []
 };

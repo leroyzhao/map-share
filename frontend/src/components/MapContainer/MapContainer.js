@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
-import { marksFetchData, toggleMarker, getUserData } from "../../actions/marksActions";
+import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
+import { marksFetchData, getUserData } from "../../actions/marksActions";
 
 import './MapContainer.scss'
 
@@ -10,12 +10,6 @@ import CurrentLocation from "../CurrentLocation/CurrentLocation";
 import RestaurantDetails from "../RestaurantComponents/RestaurantDetails";
 
 export class MapContainer extends Component {
-  // state = {
-  //   showingInfoWindow: false, //Hides or the shows the infoWindow
-  //   activeMarker: {}, //Shows the active marker upon click
-  //   selectedPlace: "" //Shows the infoWindow to the selected place upon a marker
-  // };
-
   componentWillMount() {
     // let data = {
     //   userId: '5c7015b00b10a5189ccc07e2',
@@ -26,32 +20,8 @@ export class MapContainer extends Component {
     this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
   }
 
-  // onMarkerClick = (props, marker) => {
-  //   let set = {
-  //     selectedPlace: props.nameTag,
-  //     activeMarker: marker,
-  //     showingInfoWindow: true
-  //   };
-  //   //console.log("here", this.props.marks, name, marker);
-  //   this.props.toggleMarker(set);
-  //   return alert("Hello! I am an alert box!");
-  // };
-
-  // onClose = props => {
-  //   if (this.props.toggleMarks.showingInfoWindow) {
-  //     let set = {
-  //       showingInfoWindow: false,
-  //       activeMarker: null
-  //     };
-
-  //     this.props.toggleMarker(set);
-  //   }
-  //   //this.props.toggleMarker(this.state);
-  // };
-
   render() {
-    // console.log("state: ", this.props.marks);
-    const { marks, toggleMarks } = this.props;
+    const { toggleMarks } = this.props;
 
     return (
       <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
@@ -86,7 +56,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    marks: state.marksFetchReducer,
     toggleMarks: state.marksToggleReducer
   };
 };

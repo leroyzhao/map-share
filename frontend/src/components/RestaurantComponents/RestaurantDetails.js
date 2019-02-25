@@ -10,7 +10,7 @@ export class RestaurantDetails extends Component {
   };
 
   render() {
-    const { markOnClick, getRestaurant } = this.props;
+    const { getRestaurant } = this.props;
     return (
       <div>
         {console.log(getRestaurant.data)}
@@ -83,7 +83,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    markOnClick: state.marksToggleReducer,
     getRestaurant: state.restaurantDetailReducer
   };
 };
