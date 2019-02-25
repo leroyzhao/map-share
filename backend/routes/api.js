@@ -1,14 +1,7 @@
 const express = require("express");
 const router = express.Router();
-// const Restaurant = require('../models/restaurant');
-// const Cuisine = require('../models/cuisine');
-// const Mark = require('../models/mark');
-// const PriceRange = require('../models/priceRange');
-// const Review = require('../models/review');
-// const User = require('../models/user');
 
 const dataService = require("../dataService_withuserauth");
-
 const data = dataService();
 
 // get list of restaurants from db

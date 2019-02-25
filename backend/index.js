@@ -18,14 +18,6 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
   // process.exit();
 });
 
-// let db = mongoose.createConnection(MONGO_URL, { useNewUrlParser: true });    
-// //mongoose.connect(MONGO_URL, { useNewUrlParser: true });
-// //var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', () => {
-//   console.log('connected!')
-// });
-
 // body parsing middleware
 app.use(bodyParser.json())
 
