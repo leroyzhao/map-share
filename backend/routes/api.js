@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const dataService = require("../dataService_withuserauth");
+const dataService = require("../dataService");
 const data = dataService();
 
 // get list of restaurants from db
