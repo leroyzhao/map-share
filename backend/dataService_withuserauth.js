@@ -46,7 +46,7 @@ module.exports = () => {
     addRestaurant: (restaurantData) => {
       return new Promise((resolve, reject) => {
 
-        let { groupId, geometry, restaurantName, restaurantLocation, userId } = restaurantData
+        let { groupId, geometry, restaurantName, restaurantLocation, userId, priceRange } = restaurantData
 
         if (!(groupId && geometry && restaurantName && restaurantLocation && userId)) {
           reject({"error": "missing fields, need groupId, geometry, restaurantName, restaurantLocation, userId"})
@@ -55,6 +55,12 @@ module.exports = () => {
 
         if (!mongoose.Types.ObjectId.isValid(groupId) || !mongoose.Types.ObjectId.isValid(userId)) {
           reject({"error": "either groupId or userId cannot be converted to valid ObjectId"})
+          return
+        }
+
+        // validate priceRange here if required, such that new mark wont be created
+        if (priceRange.split('').some(char => {return (char !== "$")}) || ![1,2,3].includes(priceRange.length)) {
+          reject({"error": "invalid priceRange"})
           return
         }
 
@@ -79,23 +85,60 @@ module.exports = () => {
 
               Restaurant.create({
                 ...restaurantData,
+                restaurantPriceRange: priceRange,
                 locationId: data.locationId
               })
               .then(data => {
                 console.log('returned from restaurant: ', data)
 
+                // add restaurant to PriceRange collection
+                if (priceRange) {
+                  PriceRange.findOne({ priceRange }).then(rangeData => {
+                    if (rangeData) {
+                      console.log('range already exists')
+                      rangeData.restaurantList.push(data.locationId)
+                      rangeData.save()
+                      .then(newrangedata => {
+                        console.log('new price range data', newrangedata)
+                      })
+                      .catch(err => console.log("new price range error", err))
+                    } else {
+                      console.log('range doesnt exist yet')
+                      PriceRange.create({
+                        priceRange,
+                        restaurantList: [data.locationId]
+                      })
+                      .then(newrangedata => {
+                        console.log('new price range data', newrangedata)
+                      })
+                      .catch(err => console.log("new price range error", err))
+                    }
+                  }).catch(err => console.log('couldnt find priceRange?', err))
+                  // PriceRange.findOneAndUpdate(
+                  //   { priceRange },
+                  //   { $push: { restaurantList: refId } },
+                  //   { runValidators: true }
+                  // )
+                  // .then(priceData => {
+                  //   console.log('priceData: ', priceData)
+                  // })
+                  // .catch(err => {
+                  //   console.log('price add error: ', err)
+                  // })
+                }
+
                 doc.groupMarks.push(refId)
 
                 doc.save()
-                .then(data => {
-                  console.log('returned from adding marker&user to group', data)
+                .then(groupData => {
+                  console.log('returned from adding marker&user to group', groupData)
+                  resolve(data) // restaurantData
                 })
                 .catch(err => {
                   console.log('couldnt add marker/user to group')
                   reject(err)
                 })
 
-                resolve(data)
               })
               .catch(err => reject(err));
 
