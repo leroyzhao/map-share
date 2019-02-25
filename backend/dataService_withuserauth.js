@@ -474,11 +474,12 @@ module.exports = () => {
       return new Promise((resolve, reject) => {
 
         User.findById(userId)
-          .then(data => {
-            if (data) resolve(data)
-            else reject('no user with specified id')
-          })
-          .catch(err => reject(err));
+        .populate('userGroups')
+        .then(data => {
+          if (data) resolve(data)
+          else reject('no user with specified id')
+        })
+        .catch(err => reject(err));
       });
     },
     

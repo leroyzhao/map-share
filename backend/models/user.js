@@ -18,8 +18,8 @@ const UserSchema = new Schema({
   },
   userGroups: [
     {
-      groupId: String,
-      groupName: String
+      type: Schema.Types.ObjectId,
+      ref: 'group'
     }
   ]
 })
