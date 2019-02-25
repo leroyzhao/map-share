@@ -22,7 +22,9 @@ export class RestaurantDetails extends Component {
   handleSubmit = values => {
     let data = {
       ...values,
-      position: { lat: this.props.position.lat, lng: this.props.position.lng }
+      geometry: {
+        coordinates: [this.props.position.lat, this.props.position.lng]
+      }
     };
     this.props.saveMark(data);
     this.props.addMarker(false);

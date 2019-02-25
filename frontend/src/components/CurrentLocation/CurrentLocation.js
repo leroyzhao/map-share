@@ -128,8 +128,9 @@ export class CurrentLocation extends Component {
       let target = this.map;
 
       this.props.marks.map(mark => {
+        let position = { lat: mark.geometry.coordinates[0], lng: mark.geometry.coordinates[1] }
         let marker = new maps.Marker({
-          position: mark.position
+          position: position
         });
 
         const clickOnMarker = () => {
@@ -165,7 +166,7 @@ export class CurrentLocation extends Component {
       return React.cloneElement(c, {
         map: this.map,
         google: this.props.google,
-        mapCenter: this.state.currentLocation
+        mapcenter: this.state.currentLocation
       });
     });
   }

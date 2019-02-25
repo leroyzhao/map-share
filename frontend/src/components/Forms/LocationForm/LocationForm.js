@@ -90,7 +90,7 @@ const LocationForm = props => {
 
         <div className="field">
           <Field
-            name="address"
+            name="restaurantLocation"
             component={renderField}
             type="text"
             label="Address"

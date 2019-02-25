@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
-import { marksFetchData, toggleMarker } from "../../actions/marksActions";
+import { marksFetchData, toggleMarker, getUserData } from "../../actions/marksActions";
 
 import './MapContainer.scss'
 
@@ -17,7 +17,13 @@ export class MapContainer extends Component {
   // };
 
   componentWillMount() {
-    this.props.marksFetchData("hello");
+    // let data = {
+    //   userId: '5c7015b00b10a5189ccc07e2',
+    //   groupId: '5c7016010b10a5189ccc07e3'
+    // }
+
+    // this.props.getUserData(data)
+    this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
   }
 
   // onMarkerClick = (props, marker) => {
@@ -73,7 +79,8 @@ export class MapContainer extends Component {
 const mapDispatchToProps = dispatch => {
   console.log("map dispatch to props from mapcontainer");
   return {
-    marksFetchData: url => dispatch(marksFetchData(url))
+    marksFetchData: url => dispatch(marksFetchData(url)),
+    getUserData: data => dispatch(getUserData(data))
   };
 };
 
