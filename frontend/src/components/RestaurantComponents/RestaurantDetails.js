@@ -6,6 +6,7 @@ import "./RestaurantDetails.scss";
 
 export class RestaurantDetails extends Component {
   handleOnClose = () => {
+    console.log('calling togglemarker')
     this.props.toggleMarker(false);
   };
 

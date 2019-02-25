@@ -30,12 +30,12 @@
   overflow: hidden;
 
   .full-stars {
-      position: absolute;
-      left: 0;
-      top: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      color: #fde16d;
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
   }
   .empty-stars:before, .full-stars:before {
     font-family: "Font Awesome 5 Free";

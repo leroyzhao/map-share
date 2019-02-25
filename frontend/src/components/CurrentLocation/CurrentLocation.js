@@ -6,7 +6,12 @@ import {
   restaurantFetchData,
   toggleMarker
 } from "../../actions/restaurantActions";
-import RestaurantDetails from "../RestaurantComponents/AddRestaurant";
+
+import "./CurrentLocation.scss";
+
+import { signInSuccess } from '../../actions/signInActions'
+import { GoogleLogout } from 'react-google-login';
+import RenderMap from "../RenderMap/RenderMap";
 
 const mapStyles = {
   map: {
@@ -156,19 +161,8 @@ export class CurrentLocation extends Component {
     });
   };
 
-  renderChildren() {
-    const { children } = this.props;
-
-    if (!children) return;
-
-    return React.Children.map(children, c => {
-      if (!c) return;
-      return React.cloneElement(c, {
-        map: this.map,
-        google: this.props.google,
-        mapcenter: this.state.currentLocation
-      });
-    });
+  logout = () => {
+    this.props.signInSuccess(false);
   }
 
   render() {
@@ -179,7 +173,14 @@ export class CurrentLocation extends Component {
         <div style={style} ref="map">
           Loading map...
         </div>
-        {this.renderChildren()}
+        <RenderMap map={this.map} google={this.props.google} mapcenter={this.state.currentLocation} children={this.props} />
+        <div className="box-btn-GoogleLogOut">
+          <GoogleLogout
+            buttonText="Logout"
+            onLogoutSuccess={this.logout}
+            className="btn-GoogleLogOut"
+          />
+        </div>
       </div>
     );
   }
@@ -190,7 +191,8 @@ const mapDispatchToProps = dispatch => {
     marksFetchData: url => dispatch(marksFetchData(url)),
     addMarker: bool => dispatch(addMarker(bool)),
     toggleMarker: bool => dispatch(toggleMarker(bool)),
-    restaurantFetchData: data => dispatch(restaurantFetchData(data))
+    restaurantFetchData: data => dispatch(restaurantFetchData(data)),
+    signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
 
@@ -198,7 +200,8 @@ const mapStateToProps = state => {
   return {
     marks: state.marksFetchReducer,
     addMark: state.addMarkerReducer,
-    markOnClick: state.marksToggleReducer
+    markOnClick: state.marksToggleReducer,
+    signInStatus: state.signInStatusReducer
   };
 };
 

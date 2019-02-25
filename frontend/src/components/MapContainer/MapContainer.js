@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
-import { GoogleLogout } from 'react-google-login';
+
 import { marksFetchData, getUserData } from "../../actions/marksActions";
 import { signInSuccess } from '../../actions/signInActions'
-
+import { GoogleLogout } from 'react-google-login';
 import './MapContainer.scss'
 
 import CurrentLocation from "../CurrentLocation/CurrentLocation";
@@ -29,18 +29,11 @@ export class MapContainer extends Component {
     }
   }
 
-  logout = () => {
-    console.log('hello logout getting call')
-    console.log(this.props.signInSuccess);
-    this.props.signInSuccess(false);
-  }
-
   render() {
     const { toggleMarks, signInStatus } = this.props;
 
     return (
       <>
-        {console.log(signInStatus)}
         {signInStatus ?
           <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
             {toggleMarks.status ?
@@ -50,13 +43,6 @@ export class MapContainer extends Component {
               :
               <div className="slideOut"></div>
             }
-
-            <div className="btn-GoogleLogOut col-12">
-              <GoogleLogout
-                buttonText="Logout"
-                onLogoutSuccess={this.logout}
-              />
-            </div>
 
             <InfoWindow
               marker={toggleMarks.activeMarker}
@@ -81,7 +67,6 @@ const mapDispatchToProps = dispatch => {
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
     getUserData: data => dispatch(getUserData(data)),
-    signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
 
