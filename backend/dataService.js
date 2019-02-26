@@ -194,6 +194,16 @@ module.exports = () => {
             console.log("error deleting reviewData", err)
           })
 
+          PriceRange.findOne({ priceRange: restaurantData.restaurantPriceRange })
+          .then(rangeData => {
+            rangeData.restaurantList.splice(rangeData.restaurantList.indexOf(locationId), 1)
+            rangeData.save()
+            .catch(err => console.log("err",err))
+          })
+          .catch(err => {
+            console.log("error deleting id from priceRange collection", err)
+          })
+
           Group.updateOne(
             {_id: restaurantData.groupId},
             { $pull: {groupMarks: locationId } }
@@ -264,7 +274,7 @@ module.exports = () => {
                     rangeData.save()
                     .catch(err => console.log("err",err))
                   })
-                  
+
                 }
 
                 doc.restaurantName = restaurantName ? restaurantName : doc.restaurantName
