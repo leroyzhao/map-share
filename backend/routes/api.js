@@ -41,7 +41,6 @@ router.get('/restaurants/:id', (req,res,next) => {
 // update restaurant in db
 router.put('/restaurants/:id', (req,res,next) => {
   console.log('update info of restaurant with id:', req.params.id);
-  console.log('new data: ', req.body)
 
   data.updateRestaurantById(req.params.id, req.body).then(data => {
     res.status(200).json(data) // returns old data

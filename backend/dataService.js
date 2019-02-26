@@ -249,6 +249,24 @@ module.exports = () => {
             .then(groupData => {
               if (groupData.groupMembers.some(id => {return id.equals(userId)})) {
                 
+                if (priceRange && priceRange !== doc.restaurantPriceRange) {
+
+                  PriceRange.findOne({ priceRange })
+                  .then(rangeData => {
+                    rangeData.restaurantList.push(locationId)
+                    rangeData.save()
+                    .catch(err => console.log("err",err))
+                  })
+
+                  PriceRange.findOne({ priceRange: doc.restaurantPriceRange })
+                  .then(rangeData => {
+                    rangeData.restaurantList.splice(rangeData.restaurantList.indexOf(locationId), 1)
+                    rangeData.save()
+                    .catch(err => console.log("err",err))
+                  })
+                  
+                }
+
                 doc.restaurantName = restaurantName ? restaurantName : doc.restaurantName
                 doc.restaurantLocation = restaurantLocation ? restaurantLocation : doc.restaurantLocation
                 doc.restaurantPriceRange = priceRange ? priceRange : doc.restaurantPriceRange
