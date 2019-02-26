@@ -1,14 +1,7 @@
 const express = require("express");
 const router = express.Router();
-// const Restaurant = require('../models/restaurant');
-// const Cuisine = require('../models/cuisine');
-// const Mark = require('../models/mark');
-// const PriceRange = require('../models/priceRange');
-// const Review = require('../models/review');
-// const User = require('../models/user');
 
 const dataService = require("../dataService");
-
 const data = dataService();
 
 // get list of restaurants from db
@@ -48,7 +41,6 @@ router.get('/restaurants/:id', (req,res,next) => {
 // update restaurant in db
 router.put('/restaurants/:id', (req,res,next) => {
   console.log('update info of restaurant with id:', req.params.id);
-  console.log('new data: ', req.body)
 
   data.updateRestaurantById(req.params.id, req.body).then(data => {
     res.status(200).json(data) // returns old data
@@ -63,7 +55,7 @@ router.put('/restaurants/:id', (req,res,next) => {
 router.delete('/restaurants/:id', (req,res,next) => {
   console.log('delete restaurant with id: ', req.params.id);
 
-  data.deleteRestaurantById(req.params.id).then(data => {
+  data.deleteRestaurantById(req.params.id, req.body).then(data => {
     res.status(200).json(data)
   }).catch(err => {
     res.status(400).send({'error': err})
@@ -74,7 +66,7 @@ router.delete('/restaurants/:id', (req,res,next) => {
 
 //get reviews by restuarant
 router.get('/reviews', (req,res,next) => {
-  data.getReviewsByRestaurant(req.body).then(data => { //getAllReviews()
+  data.getReviewsByRestaurant(req.query).then(data => { //getAllReviews()
     res.status(200).json(data)
   }).catch(err => {
     res.status(400).send(err)
@@ -120,11 +112,19 @@ router.delete('/reviews/:id', (req,res,next) => {
 
 // get all marks to populate map
 router.get('/marks', (req,res,next) => {
-  data.getMarks(req.body).then(data => {
-    res.json(data);
-  }).catch(err => {
-    res.send(err)
-  })
+  if (req.query.priceRange) {
+    data.getMarksByPriceRange(req.query).then(data => {
+      res.json(data);
+    }).catch(err => {
+      res.send(err)
+    })
+  } else {
+    data.getMarks(req.query).then(data => {
+      res.json(data);
+    }).catch(err => {
+      res.send(err)
+    })
+  }
 });
 
 /////////////////////////USER///////////////////////////////
@@ -197,7 +197,11 @@ router.post('/groups', (req,res,next) => {
 
 //list members of group
 router.get('/groups/:groupId', (req,res,next) => {
-  res.send({type: 'GET members of specific group'});
+  data.getGroup(req.params.groupId).then(data => {
+    res.status(200).json(data)
+  }).catch(err => {
+    res.status(400).send({"error": err})
+  })
 });
 
 ///////////////////////////////////////////////////////////////////

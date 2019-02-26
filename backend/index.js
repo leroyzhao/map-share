@@ -1,9 +1,10 @@
 const HTTP_PORT = process.env.PORT || 3000;
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const routes = require('./routes/api');
-const MONGO_URL = require('./mongoURI');
+const MONGO_URL = require('./mongoURL');
 
 //set up express app
 const app = express();
@@ -17,16 +18,11 @@ mongoose.connect(MONGO_URL, { useNewUrlParser: true }).then(() => {
   // process.exit();
 });
 
-// let db = mongoose.createConnection(MONGO_URL, { useNewUrlParser: true });    
-// //mongoose.connect(MONGO_URL, { useNewUrlParser: true });
-// //var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', () => {
-//   console.log('connected!')
-// });
-
 // body parsing middleware
 app.use(bodyParser.json())
+
+// allow CORS
+app.use(cors())
 
 // initialize routes
 app.use('/api', routes);
