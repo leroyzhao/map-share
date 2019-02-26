@@ -30,6 +30,7 @@ export class MapContainer extends Component {
   }
 
   logout = () => {
+    console.log('firing logout')
     this.props.signInSuccess(false);
   }
 
@@ -46,6 +47,7 @@ export class MapContainer extends Component {
                 buttonText="Logout"
                 onLogoutSuccess={this.logout}
                 className="btn-GoogleLogOut"
+                onClick={(e)=> {console.log("clicked!")}}
               />
             </div>
 

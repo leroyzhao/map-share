@@ -1,8 +1,8 @@
-html,
-body {
+.App {
   height: 100%;
-  margin: 0;
-  padding: 0;
+  & > div {
+    height: 100%;
+  }
 }
 
 #root {

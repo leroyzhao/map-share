@@ -1,0 +1,29 @@
+
+
+.signInForm-container {
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.adorama.com/alc/wp-content/uploads/2018/02/BBBURGER8-1024x683-825x465.jpg");
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  margin: 0 auto; /* Added */
+  //float: none; /* Added */
+  width: 80%;
+  max-width: 600px;
+  padding-bottom:8px;
+}
+
+.card-text {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
