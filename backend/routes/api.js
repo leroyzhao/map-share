@@ -67,7 +67,7 @@ router.delete('/restaurants/:id', (req,res,next) => {
 
 //get reviews by restuarant
 router.get('/reviews', (req,res,next) => {
-  data.getReviewsByRestaurant(req.body).then(data => { //getAllReviews()
+  data.getReviewsByRestaurant(req.query).then(data => { //getAllReviews()
     res.status(200).json(data)
   }).catch(err => {
     res.status(400).send(err)

@@ -93,7 +93,8 @@ module.exports = () => {
 
                 // add restaurant to PriceRange collection
                 if (priceRange) {
-                  PriceRange.findOne({ priceRange }).then(rangeData => {
+                  PriceRange.findOne({ priceRange })
+                  .then(rangeData => {
                     if (rangeData) {
                       console.log('range already exists')
                       rangeData.restaurantList.push(data.locationId)
@@ -113,7 +114,8 @@ module.exports = () => {
                       })
                       .catch(err => console.log("new price range error", err))
                     }
-                  }).catch(err => console.log('couldnt find priceRange?', err))
+                  })
+                  .catch(err => console.log('couldnt find priceRange?', err))
                   // PriceRange.findOneAndUpdate(
                   //   { priceRange },
                   //   { $push: { restaurantList: refId } },
@@ -277,12 +279,12 @@ module.exports = () => {
       })
     },
 
-    getReviewsByRestaurant: (reqBody) => {
+    getReviewsByRestaurant: (reqQuery) => {
       return new Promise((resolve, reject) => {
-        let { locationId } = reqBody
+        let { locationId } = reqQuery
 
         if (!locationId) {
-          reject({"error": "include locationId in body"})
+          reject({"error": "include locationId in query"})
           return;
         }
 
