@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
+import { addMarker, marksFetchData } from "../../actions/marksActions";
 import {
-  addMarker,
-  marksFetchData,
+  restaurantFetchData,
   toggleMarker
-} from "../../actions/marksActions";
-import RestaurantDetails from "../RestaurantComponents/AddRestaurant";
+} from "../../actions/restaurantActions";
+
+import RenderMap from "../RenderMap/RenderMap";
+import AddRestaurant from "../RestaurantComponents/AddRestaurant";
 
 const mapStyles = {
   map: {
@@ -105,7 +107,7 @@ export class CurrentLocation extends Component {
       this.map = new maps.Map(node, mapConfig);
       let test = this.map;
 
-      maps.event.addListener(test, "click", function(event) {
+      maps.event.addListener(test, "click", function (event) {
         addMark(test, maps, event.latLng);
       });
 
@@ -128,21 +130,18 @@ export class CurrentLocation extends Component {
       let target = this.map;
 
       this.props.marks.map(mark => {
-        let infoWindow = new maps.InfoWindow({
-          content: "info window"
-        });
+        let position = { lat: mark.geometry.coordinates[0], lng: mark.geometry.coordinates[1] }
         let marker = new maps.Marker({
-          position: mark.position
+          position: position
         });
 
         const clickOnMarker = () => {
-          this.props.toggleMarker(true);
-          console.log(this.props.markOnClick);
+          this.props.restaurantFetchData(mark);
         };
 
         marker.setMap(target);
 
-        marker.addListener("click", function() {
+        marker.addListener("click", function () {
           clickOnMarker();
         });
       });
@@ -159,31 +158,16 @@ export class CurrentLocation extends Component {
     });
   };
 
-  renderChildren() {
-    const { children } = this.props;
-
-    if (!children) return;
-
-    return React.Children.map(children, c => {
-      if (!c) return;
-      return React.cloneElement(c, {
-        map: this.map,
-        google: this.props.google,
-        mapCenter: this.state.currentLocation
-      });
-    });
-  }
-
   render() {
     const style = Object.assign({}, mapStyles.map);
     return (
       <div>
         {this.loadMarker()}
-        <RestaurantDetails position={this.state.newMarkPosition} />
         <div style={style} ref="map">
           Loading map...
         </div>
-        {this.renderChildren()}
+        <AddRestaurant position={this.state.newMarkPosition} />
+        <RenderMap map={this.map} google={this.props.google} mapcenter={this.state.currentLocation} children={this.props} />
       </div>
     );
   }
@@ -193,7 +177,8 @@ const mapDispatchToProps = dispatch => {
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
     addMarker: bool => dispatch(addMarker(bool)),
-    toggleMarker: bool => dispatch(toggleMarker(bool))
+    toggleMarker: bool => dispatch(toggleMarker(bool)),
+    restaurantFetchData: data => dispatch(restaurantFetchData(data))
   };
 };
 
@@ -201,7 +186,8 @@ const mapStateToProps = state => {
   return {
     marks: state.marksFetchReducer,
     addMark: state.addMarkerReducer,
-    markOnClick: state.marksToggleReducer
+    markOnClick: state.marksToggleReducer,
+    signInStatus: state.signInStatusReducer
   };
 };
 

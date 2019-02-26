@@ -3,7 +3,7 @@ const initToggleState = {
 };
 
 const initModalState = {
-  showModal: false //Hides or the shows modalWindow
+  showModal: false
 };
 
 const initMarkerState = {
@@ -13,7 +13,7 @@ const initMarkerState = {
 export const marksFetchReducer = (state = initMarkerState.marks, action) => {
   switch (action.type) {
     case "MARKS_FETCH_DATA_SUCCESS":
-      return action.marks;
+      return state.concat(action.marks);
     default:
       return state;
   }
@@ -28,7 +28,7 @@ export const marksToggleReducer = (state = initToggleState.status, action) => {
   }
 };
 
-export const addMarkerReducer = (state = initModalState, action) => {
+export const addMarkerReducer = (state = initModalState.showModal, action) => {
   switch (action.type) {
     case "ADD_MARKER":
       return action;

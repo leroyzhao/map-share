@@ -1,62 +1,76 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
-import { marksFetchData, toggleMarker } from "../../actions/marksActions";
+import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
+
+import { marksFetchData, getUserData } from "../../actions/marksActions";
+import { signInSuccess } from '../../actions/signInActions'
+import { GoogleLogout } from 'react-google-login';
+import './MapContainer.scss'
+
 import CurrentLocation from "../CurrentLocation/CurrentLocation";
 import RestaurantDetails from "../RestaurantComponents/RestaurantDetails";
+import SignInForm from "../Forms/SignInForm/SignInForm";
 
 export class MapContainer extends Component {
-  // state = {
-  //   showingInfoWindow: false, //Hides or the shows the infoWindow
-  //   activeMarker: {}, //Shows the active marker upon click
-  //   selectedPlace: "" //Shows the infoWindow to the selected place upon a marker
-  // };
+  // componentWillMount() {
+  //   // let data = {
+  //   //   userId: '5c7015b00b10a5189ccc07e2',
+  //   //   groupId: '5c7016010b10a5189ccc07e3'
+  //   // }
 
-  componentWillMount() {
-    this.props.marksFetchData("hello");
+  //   // this.props.getUserData(data)
+  //   this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.signInStatus !== this.props.signInStatus && this.props.signInStatus === true) {
+      this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
+    }
   }
 
-  // onMarkerClick = (props, marker) => {
-  //   let set = {
-  //     selectedPlace: props.nameTag,
-  //     activeMarker: marker,
-  //     showingInfoWindow: true
-  //   };
-  //   //console.log("here", this.props.marks, name, marker);
-  //   this.props.toggleMarker(set);
-  //   return alert("Hello! I am an alert box!");
-  // };
-
-  onClose = props => {
-    if (this.props.toggleMarks.showingInfoWindow) {
-      let set = {
-        showingInfoWindow: false,
-        activeMarker: null
-      };
-
-      this.props.toggleMarker(set);
-    }
-    //this.props.toggleMarker(this.state);
-  };
+  logout = () => {
+    this.props.signInSuccess(false);
+  }
 
   render() {
-    // console.log("state: ", this.props.marks);
-    const { marks, toggleMarks } = this.props;
+    const { toggleMarks, signInStatus } = this.props;
 
     return (
-      <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-        <RestaurantDetails />
-        <InfoWindow
-          marker={toggleMarks.activeMarker}
-          visible={toggleMarks.showingInfoWindow}
-          onClose={this.onClose}
-        >
-          <div>
-            <h4>{toggleMarks.selectedPlace}</h4>
-          </div>
-        </InfoWindow>
-      </CurrentLocation>
+      <>
+        {signInStatus ?
+          <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
+
+            <div className="box-btn-GoogleLogOut">
+              <GoogleLogout
+                buttonText="Logout"
+                onLogoutSuccess={this.logout}
+                className="btn-GoogleLogOut"
+              />
+            </div>
+
+            {toggleMarks.status ?
+              <div className='detailsContainer container-fluid'>
+                <RestaurantDetails />
+              </div>
+              :
+              <div className="slideOut"></div>
+            }
+
+            <InfoWindow
+              marker={toggleMarks.activeMarker}
+              visible={toggleMarks.showingInfoWindow}
+              onClose={this.onClose}
+            >
+              <div>
+                <h4>{toggleMarks.selectedPlace}</h4>
+              </div>
+            </InfoWindow>
+          </CurrentLocation>
+          :
+          <SignInForm />
+        }
+      </>
     );
   }
 }
@@ -65,14 +79,15 @@ const mapDispatchToProps = dispatch => {
   console.log("map dispatch to props from mapcontainer");
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
-    toggleMarker: set => dispatch(toggleMarker(set))
+    getUserData: data => dispatch(getUserData(data)),
+    signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
 
 const mapStateToProps = state => {
   return {
-    marks: state.marksFetchReducer,
-    toggleMarks: state.marksToggleReducer
+    toggleMarks: state.marksToggleReducer,
+    signInStatus: state.signInStatusReducer
   };
 };
 
