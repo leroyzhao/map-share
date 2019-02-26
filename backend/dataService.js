@@ -184,7 +184,7 @@ module.exports = () => {
             console.log("error deleting markData", err)
           })
 
-          Review.deleteMany({ restaurantId: locationId })
+          Review.deleteMany({ locationId })
           .then(reviewData => {
             console.log('reviewData: ', reviewData)
           })
@@ -214,7 +214,7 @@ module.exports = () => {
       })
     },
 
-    updateRestaurantById: (restaurantId, newData) => {
+    updateRestaurantById: (locationId, newData) => {
       return new Promise((resolve, reject) => {
 
         let { userId, restaurantName, restaurantLocation, priceRange, groupId } = newData
@@ -223,13 +223,13 @@ module.exports = () => {
           reject("body requires userId and groupId")
           return
         }
-        if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
+        if (!(mongoose.Types.ObjectId.isValid(locationId) &&
               mongoose.Types.ObjectId.isValid(userId))) {
           reject("provide valid userId in body, valid locationId in URL")
           return
         }
 
-        Restaurant.findOne({locationId: restaurantId})
+        Restaurant.findOne({ locationId })
         .then(doc => {
 
           if (!doc) {
@@ -303,14 +303,14 @@ module.exports = () => {
     
     addReview: (reviewData) => {
       return new Promise((resolve, reject) => {
-        let { restaurantId, reviewUser} = reviewData
+        let { locationId, reviewUser} = reviewData
 
-        if (!(restaurantId && reviewUser && reviewUser.userId)) {
-          reject("include restaurantId, reviewUser, and reviewUser.userId")
+        if (!(locationId && reviewUser && reviewUser.userId)) {
+          reject("include locationId, reviewUser, and reviewUser.userId")
           return
         }
 
-        Restaurant.findOne({locationId: reviewData.restaurantId})
+        Restaurant.findOne({ locationId })
         .populate("groupId")
         .then(doc => {
           if (!doc) {
@@ -347,15 +347,15 @@ module.exports = () => {
     updateReviewById: (reviewId, newReview) => {
       return new Promise((resolve, reject) => {
 
-        let { restaurantId, reviewUser, reviewContent, reviewRating } = newReview
+        let { locationId, reviewUser, reviewContent, reviewRating } = newReview
 
-        if (!(restaurantId && reviewContent && reviewRating && reviewUser && reviewUser.userId)) {
-          reject("include restaurantId, reviewContent, reviewRating, reviewUser, and reviewUser.userId")
+        if (!(locationId && reviewContent && reviewRating && reviewUser && reviewUser.userId)) {
+          reject("include locationId, reviewContent, reviewRating, reviewUser, and reviewUser.userId")
           return
         }
-        else if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
+        else if (!(mongoose.Types.ObjectId.isValid(locationId) &&
                    mongoose.Types.ObjectId.isValid(reviewUser.userId))) {
-          reject("provide valid restaurantId and userId")
+          reject("provide valid locationId and userId")
           return
         }
 
@@ -370,7 +370,7 @@ module.exports = () => {
           console.log("OLD DOC:", doc)
           console.log("NEW DOC:", newReview)
 
-          if (!( doc.restaurantId.toString() === newReview.restaurantId ) ||
+          if (!( doc.locationId.toString() === newReview.locationId ) ||
               !( doc.reviewUser.userId.toString() === newReview.reviewUser.userId)) {
 
             reject("cannot update restaurant or user Id")

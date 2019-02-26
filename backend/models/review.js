@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 // create review Schema & model
 const ReviewSchema = new Schema({
-  restaurantId: {
+  locationId: {
     type: Schema.Types.ObjectId,
-    required: [true, 'restarantId is required for review'],
+    required: [true, 'locationId is required for review'],
     // set: function(id) {
     //   this.previousResId = this.restaurantId;
     //   this._conditions = { ...this._conditions, restaurantId:id}
