@@ -31,10 +31,8 @@ const RestaurantSchema = new Schema({
     validate: {
       validator: function(v) {
         if (v.split('').some(char => {return (char !== "$")}) || ![1,2,3].includes(v.length)) {
-          console.log('invalid')
           return false
         }
-        console.log('valid')
         return true
         //return /\d{3}-\d{3}-\d{4}/.test(v);
       },

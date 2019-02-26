@@ -48,8 +48,8 @@ module.exports = () => {
 
         let { groupId, geometry, restaurantName, restaurantLocation, userId, priceRange } = restaurantData
 
-        if (!(groupId && geometry && restaurantName && restaurantLocation && userId)) {
-          reject({"error": "missing fields, need groupId, geometry, restaurantName, restaurantLocation, userId"})
+        if (!(groupId && geometry && restaurantName && restaurantLocation && userId && priceRange)) {
+          reject({"error": "missing fields, need groupId, geometry, restaurantName, restaurantLocation, userId, priceRange"})
           return;
         }
 
@@ -217,16 +217,14 @@ module.exports = () => {
     updateRestaurantById: (restaurantId, newData) => {
       return new Promise((resolve, reject) => {
 
-        // check if restaurant&user id match! then update. otherwise throw error
+        let { userId, restaurantName, restaurantLocation, priceRange, groupId } = newData
 
-        let { userId, restaurantName, restaurantLocation, restaurantCuisine, restaurantPriceRange } = newData
-
-        if (!(userId && restaurantName && restaurantLocation)) {
-          reject("body requires userId, restaurantName, restaurantLocation")
+        if (!(userId && groupId)) {
+          reject("body requires userId and groupId")
           return
         }
-        else if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
-                   mongoose.Types.ObjectId.isValid(userId))) {
+        if (!(mongoose.Types.ObjectId.isValid(restaurantId) &&
+              mongoose.Types.ObjectId.isValid(userId))) {
           reject("provide valid userId in body, valid locationId in URL")
           return
         }
@@ -242,15 +240,16 @@ module.exports = () => {
           console.log("OLD DOC:", doc)
           console.log("NEW DOC:", newData)
 
-          if (newData.locationId || newData.groupId || newData.restaurantReviews) {
-            reject("cannot update restaurant locationId or groupId")
+          if (newData.locationId || newData.restaurantReviews || newData.geometry) {
+            reject("cannot update restaurant locationId, reviews, or geometry")
           } else {
             Group.findById(doc.groupId)
             .then(groupData => {
               if (groupData.groupMembers.some(id => {return id.equals(userId)})) {
                 
-                doc.restaurantName = restaurantName
-                doc.restaurantLocation = restaurantLocation
+                doc.restaurantName = restaurantName ? restaurantName : doc.restaurantName
+                doc.restaurantLocation = restaurantLocation ? restaurantLocation : doc.restaurantLocation
+                doc.restaurantPriceRange = priceRange ? priceRange : doc.restaurantPriceRange
 
                 doc.save()
                 .then(data => {resolve( {"success": data} )})
