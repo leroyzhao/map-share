@@ -1,7 +1,5 @@
 import axios from "axios";
 
-let marks = []
-
 export const addMarker = bool => {
   return {
     type: "ADD_MARKER",
@@ -24,7 +22,6 @@ export const marksIsLoading = bool => {
 };
 
 export const marksFetchDataSuccess = marks => {
-  console.log('first fetch===>', marks);
   return {
     type: "MARKS_FETCH_DATA_SUCCESS",
     marks: marks
@@ -35,7 +32,9 @@ export const marksFetchData = url => {
   return dispatch => {
     axios
       .get(url + 'groupId=5c7016010b10a5189ccc07e3')
-      .then(res => dispatch(marksFetchDataSuccess(res.data.groupMarks)));
+      .then(res => {
+        dispatch(marksFetchDataSuccess(res.data))
+      });
   };
 };
 
@@ -47,21 +46,45 @@ export const getUserData = data => {
 }
 
 export const saveMark = data => {
-  let temp = {
+  let restaurantData = {
     userId: "5c7015b00b10a5189ccc07e2",
     groupId: "5c7016010b10a5189ccc07e3",
-    ...data,
+    restaurantName: data.restaurantName,
+    restaurantLocation: data.restaurantLocation,
+    priceRange: data.priceRange,
     geometry: data.geometry
   }
 
-  console.log('data format: ', temp);
+  console.log('data format: ', restaurantData);
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     axios
-      .post("https://map-share.herokuapp.com/api/restaurants", temp)
-      .then(res => dispatch(marksFetchDataSuccess([...marks, temp])))
+      .post("https://map-share.herokuapp.com/api/restaurants", restaurantData)
+      .then(res => {
+        let markData = {
+          locationId: res.data.locationId,
+          geometry: data.geometry
+        }
+
+        let reviewData = {
+          locationId: res.data.locationId,
+          reviewContent: data.review,
+          reviewRating: data.rating,
+          reviewUser: {
+            userId: "5c7015b00b10a5189ccc07e2"
+          }
+        }
+
+        dispatch(marksFetchDataSuccess(markData))
+
+        axios
+          .post("https://map-share.herokuapp.com/api/reviews", reviewData)
+          .catch(err => {
+            console.log(err.response);
+          })
+      })
       .catch(err => {
-        console.log(err);
+        console.log(err.response);
       })
   };
 };

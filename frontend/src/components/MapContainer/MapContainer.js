@@ -29,6 +29,10 @@ export class MapContainer extends Component {
     }
   }
 
+  logout = () => {
+    this.props.signInSuccess(false);
+  }
+
   render() {
     const { toggleMarks, signInStatus } = this.props;
 
@@ -36,6 +40,15 @@ export class MapContainer extends Component {
       <>
         {signInStatus ?
           <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
+
+            <div className="box-btn-GoogleLogOut">
+              <GoogleLogout
+                buttonText="Logout"
+                onLogoutSuccess={this.logout}
+                className="btn-GoogleLogOut"
+              />
+            </div>
+
             {toggleMarks.status ?
               <div className='detailsContainer container-fluid'>
                 <RestaurantDetails />
@@ -67,6 +80,7 @@ const mapDispatchToProps = dispatch => {
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
     getUserData: data => dispatch(getUserData(data)),
+    signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
 

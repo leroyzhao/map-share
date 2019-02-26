@@ -3,13 +3,26 @@ import axios from "axios";
 export const restaurantFetchData = data => {
   return dispatch => {
     axios
-      .get("https://jsonplaceholder.typicode.com/todos/1")
-      .then(res => {
+      .get("https://map-share.herokuapp.com/api/restaurants/" + data.locationId)
+      .then(resRestaurant => {
         // let item = { api: res.data, data: data };
-        dispatch(currentRestaurant(res.data, data));
-        dispatch(toggleMarker(true));
+        axios
+          .get("https://map-share.herokuapp.com/api/reviews", { params: { locationId: resRestaurant.data.locationId } })
+          .then(resReviews => {
+            console.log(resReviews.data)
+            let restaurantDetails = {
+              restaurantLocation: resRestaurant.data.restaurantLocation,
+              restaurantName: resRestaurant.data.restaurantName,
+              priceRange: resRestaurant.data.restaurantPriceRange,
+              reviews: resReviews.data.restaurantReviews
+            }
+
+            dispatch(currentRestaurant(restaurantDetails, data));
+            dispatch(toggleMarker(true));
+          })
+          .catch(err => console.log('review get error: ', err.response));
       })
-      .catch(err => console.log("restaurant fetch data error---> ", err));
+      .catch(err => console.log('restaurant get error: ', err.response));
   };
 };
 

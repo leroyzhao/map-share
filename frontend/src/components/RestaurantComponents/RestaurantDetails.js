@@ -6,18 +6,34 @@ import "./RestaurantDetails.scss";
 
 export class RestaurantDetails extends Component {
   handleOnClose = () => {
-    console.log('calling togglemarker')
     this.props.toggleMarker(false);
   };
+
+  getRatingSum = (reviews) => {
+    if (reviews.length > 0) {
+      const amount = (item) => {
+        return item.reviewRating
+      }
+
+      const sum = (total, value) => {
+        return total + value;
+      }
+
+      return reviews.map(amount).reduce(sum) / reviews.length;
+    }
+    else {
+      return null
+    }
+  }
 
   render() {
     const { getRestaurant } = this.props;
     return (
       <div>
-        {console.log(getRestaurant.data)}
+        {console.log(getRestaurant)}
         <div className="row">
           <div className="col-12 p-0">
-            <img className="img-fluid" src={getRestaurant.data.img} alt="" />
+            <img className="img-fluid" src="https://cdn-images-1.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png" alt="" />
           </div>
           <div className="btn-custom">
             <button
@@ -32,13 +48,13 @@ export class RestaurantDetails extends Component {
 
         <div className="row preview-info-custom">
           <div className="col-8">
-            {getRestaurant.data.restaurantName}
+            {getRestaurant.api.restaurantName}
           </div>
           <div className="col-4">
-            {getRestaurant.data.priceRange}
+            {getRestaurant.api.priceRange}
           </div>
           <div className="col-12">
-            {getRestaurant.data.address}
+            {getRestaurant.api.restaurantLocation}
           </div>
         </div>
 
@@ -49,25 +65,35 @@ export class RestaurantDetails extends Component {
           <div className="col-12">
             <div className="stars">
               <div className="empty-stars"></div>
-              <div className="full-stars" style={{ width: `calc(100% * ${getRestaurant.data.rating / 5})` }}></div>
+              <div className="full-stars" style={{ width: `calc(100% * ${this.getRatingSum(getRestaurant.api.reviews) / 5})` }}></div>
             </div>
           </div>
         </div>
 
         <div className="row review">
           <div className="col-12">
-            Review summary
-              <hr />
+            <div className="row">
+              <div className="col-6">
+                Review summary
+              </div>
+              <div className="col-6">
+                <button className="btn btn-dark">add review</button>
+              </div>
+            </div>
+            <hr />
           </div>
 
           <div className="col-2">
             pic
-            </div>
+          </div>
           <div className="col-10 pl-0">
-            {getRestaurant.data.review}
-            {getRestaurant.data.review}
-            {getRestaurant.data.review}
-            {getRestaurant.data.review}
+            {getRestaurant.api.reviews.map(review => {
+              return (
+                <div key={review.locationId}>
+                  {review.reviewContent}
+                </div>
+              )
+            })}
           </div>
 
         </div>

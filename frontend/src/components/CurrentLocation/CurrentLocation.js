@@ -7,11 +7,8 @@ import {
   toggleMarker
 } from "../../actions/restaurantActions";
 
-import "./CurrentLocation.scss";
-
-import { signInSuccess } from '../../actions/signInActions'
-import { GoogleLogout } from 'react-google-login';
 import RenderMap from "../RenderMap/RenderMap";
+import AddRestaurant from "../RestaurantComponents/AddRestaurant";
 
 const mapStyles = {
   map: {
@@ -161,10 +158,6 @@ export class CurrentLocation extends Component {
     });
   };
 
-  logout = () => {
-    this.props.signInSuccess(false);
-  }
-
   render() {
     const style = Object.assign({}, mapStyles.map);
     return (
@@ -173,14 +166,8 @@ export class CurrentLocation extends Component {
         <div style={style} ref="map">
           Loading map...
         </div>
+        <AddRestaurant position={this.state.newMarkPosition} />
         <RenderMap map={this.map} google={this.props.google} mapcenter={this.state.currentLocation} children={this.props} />
-        <div className="box-btn-GoogleLogOut">
-          <GoogleLogout
-            buttonText="Logout"
-            onLogoutSuccess={this.logout}
-            className="btn-GoogleLogOut"
-          />
-        </div>
       </div>
     );
   }
@@ -191,8 +178,7 @@ const mapDispatchToProps = dispatch => {
     marksFetchData: url => dispatch(marksFetchData(url)),
     addMarker: bool => dispatch(addMarker(bool)),
     toggleMarker: bool => dispatch(toggleMarker(bool)),
-    restaurantFetchData: data => dispatch(restaurantFetchData(data)),
-    signInSuccess: bool => dispatch(signInSuccess(bool))
+    restaurantFetchData: data => dispatch(restaurantFetchData(data))
   };
 };
 
