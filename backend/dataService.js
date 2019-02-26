@@ -316,17 +316,43 @@ module.exports = () => {
           return;
         }
 
-        Restaurant.findOne({ locationId })
-        .populate("restaurantReviews")
+        Restaurant.aggregate([
+          {
+            $match : { locationId:  mongoose.Types.ObjectId(locationId) }
+          },
+          { $lookup: {from: 'reviews', localField: 'restaurantReviews', foreignField: '_id', as: 'restaurantReviews'} },
+          {
+            $project : {
+              groupId: 0,
+              _id: 0,
+              __v: 0,
+              "restaurantReviews.locationId" : 0,
+              "restaurantReviews._id" : 0,
+              "restaurantReviews.__v" : 0
+            }
+          },
+        ])
         .then(data => {
-          if (data) {
-            console.log('restaurantReviews', data.restaurantReviews)
-            resolve(data)
+          if (data.length === 1) {
+            resolve(data[0])
           } else {
-            reject({"error": "no restaurant with specified id"})
+            reject({"error": "locationId doesn't exist"})
           }
+          
         })
-        .catch(err => reject(err));
+        .catch(err => reject(err))
+
+        // Restaurant.findOne({ locationId })
+        // .populate("restaurantReviews")
+        // .then(data => {
+        //   if (data) {
+        //     console.log('restaurantReviews', data.restaurantReviews)
+        //     resolve(data)
+        //   } else {
+        //     reject({"error": "no restaurant with specified id"})
+        //   }
+        // })
+        // .catch(err => reject(err));
 
       });
     },
