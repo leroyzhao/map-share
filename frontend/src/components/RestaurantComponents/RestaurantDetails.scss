@@ -1,7 +1,65 @@
-.detailsContainer {
+@import url("https://use.fontawesome.com/releases/v5.7.2/css/solid.css");
+
+@media only screen and (min-width: 700px) and (max-width: 1050px) {
+  .detailsContainer {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 0px) and (max-width: 700px) {
+  .detailsContainer {
+    width: 100%;
+  }
+}
+
+.btn-custom {
   position: absolute;
-  width: 25%;
-  height: 100%;
-  background-color: whitesmoke;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  right: 0px;
+}
+
+.preview-info-custom {
+  padding: 1rem;
+  background-color: rgb(10, 152, 247);
+}
+
+.stars {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  color: #b1b1b1;
+  overflow: hidden;
+
+  .full-stars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+  }
+  .empty-stars:before, .full-stars:before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f005\f005\f005\f005\f005";
+    font-size: 14pt;
+  }
+  
+  .empty-stars:before {
+    -webkit-text-stroke: 1px #848484;
+  }
+  .full-stars:before {
+    -webkit-text-stroke: 1px orange;
+  }
+}
+
+.review-hr {
+  height: 1rem;
+}
+
+.rating {
+  margin: 5%;
+
+  .col-12 {
+    justify-content: center;
+    display: flex;
+  }
 }

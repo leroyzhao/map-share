@@ -1,18 +1,5 @@
 import axios from "axios";
 
-let marks = [
-  {
-    id: 1,
-    nameTag: "Jam3 Toronto",
-    position: { lat: 43.6472857, lng: -79.3925776 }
-  },
-  {
-    id: 2,
-    nameTag: "Your position",
-    position: { lat: 43.6425662, lng: -79.3892455 }
-  }
-];
-
 export const addMarker = bool => {
   return {
     type: "ADD_MARKER",
@@ -43,17 +30,61 @@ export const marksFetchDataSuccess = marks => {
 
 export const marksFetchData = url => {
   return dispatch => {
-    dispatch(marksFetchDataSuccess(marks));
+    axios
+      .get(url + 'groupId=5c7016010b10a5189ccc07e3')
+      .then(res => {
+        dispatch(marksFetchDataSuccess(res.data))
+      });
   };
 };
 
-export const saveMark = data => {
-  let num = marks.length;
-  let test = { id: num + 1, position: { lat: data.lat, lng: data.lng } };
+export const getUserData = data => {
+  // let url = 'https://map-share.herokuapp.com/api/marks?groupId='
+  // return dispatch => {
 
-  return (dispatch, getState) => {
+  // }
+}
+
+export const saveMark = data => {
+  let restaurantData = {
+    userId: "5c7015b00b10a5189ccc07e2",
+    groupId: "5c7016010b10a5189ccc07e3",
+    restaurantName: data.restaurantName,
+    restaurantLocation: data.restaurantLocation,
+    priceRange: data.priceRange,
+    geometry: data.geometry
+  }
+
+  console.log('data format: ', restaurantData);
+
+  return (dispatch) => {
     axios
-      .post("https://jsonplaceholder.typicode.com/posts", test)
-      .then(res => dispatch(marksFetchDataSuccess([...marks, res.data])));
+      .post("https://map-share.herokuapp.com/api/restaurants", restaurantData)
+      .then(res => {
+        let markData = {
+          locationId: res.data.locationId,
+          geometry: data.geometry
+        }
+
+        let reviewData = {
+          locationId: res.data.locationId,
+          reviewContent: data.review,
+          reviewRating: data.rating,
+          reviewUser: {
+            userId: "5c7015b00b10a5189ccc07e2"
+          }
+        }
+
+        dispatch(marksFetchDataSuccess(markData))
+
+        axios
+          .post("https://map-share.herokuapp.com/api/reviews", reviewData)
+          .catch(err => {
+            console.log(err.response);
+          })
+      })
+      .catch(err => {
+        console.log(err.response);
+      })
   };
 };

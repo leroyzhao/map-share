@@ -20,10 +20,14 @@ export class RestaurantDetails extends Component {
   // };
 
   handleSubmit = values => {
-    this.props.saveMark(this.props.position);
+    let data = {
+      ...values,
+      geometry: {
+        coordinates: [this.props.position.lat, this.props.position.lng]
+      }
+    };
+    this.props.saveMark(data);
     this.props.addMarker(false);
-
-    return alert(JSON.stringify(values, 0, 2));
   };
 
   render() {
@@ -36,7 +40,7 @@ export class RestaurantDetails extends Component {
           dialogClassName="dialog"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>Add Location</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <LocationForm onSubmit={this.handleSubmit} />

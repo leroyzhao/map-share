@@ -1,40 +1,45 @@
 import React from "react";
 import { reduxForm, Field } from "redux-form";
 
+import "./LocationForm.scss"
+
 const validate = val => {
   const errors = {};
 
   if (!val.restaurantName) {
-    errors.restaurantName = "Required";
+    errors.restaurantName = "*Required";
   }
   if (!val.address) {
-    errors.address = "Required";
+    errors.address = "*Required";
   }
   if (!val.priceRange) {
-    errors.priceRange = "Required";
+    errors.priceRange = "*Required";
   }
   if (!val.review) {
-    errors.review = "you must write a review";
+    errors.review = "*You must write a review...";
+  }
+  if (!val.rating) {
+    errors.rating = "*Please provide a rating"
   }
 
   return errors;
 };
 
-const renderField = ({ input, label, type, meta: { touched, error } }) => (
-  <div className="control">
-    <label className="field">{label}</label>
-    {renderOnType(input, type)}
-    {touched && (error && <span>{error}</span>)}
+const renderField = ({ input, label, type, setOptions, meta: { touched, error } }) => (
+  <div className="control row-12">
+    <label className="title">{label}</label>
+    {renderOnType(input, type, setOptions)}
+    {touched && (error && <span className="text-danger">{error}</span>)}
   </div>
 );
 
-const renderOnType = (input, type) => {
+const renderOnType = (input, type, setOptions) => {
   switch (type) {
     case "text":
-      return <input className="input" {...input} type={type} />;
+      return <input className="form-control" {...input} type={type} />;
     case "select":
       return (
-        <select {...input}>
+        <select className="form-control" {...input}>
           <option />
           <option value="$">$</option>
           <option value="$$">$$</option>
@@ -42,8 +47,30 @@ const renderOnType = (input, type) => {
         </select>
       );
     case "textarea":
-      return <textarea {...input} />;
+      return <textarea className="form-control" {...input} rows="3" />;
+    case "rate":
+      return <div className="rating-container">{renderRating(input, setOptions)}</div>;
+    default:
+      return <div />;
   }
+};
+
+const renderRating = (input, setOptions) => {
+  return (
+    <div className="rating">
+      {setOptions.map(option => {
+        return (
+          <>
+            <input type="radio" id={option} {...input} value={option} />
+            <label
+              className="stars"
+              htmlFor={option}
+            />
+          </>
+        );
+      })}
+    </div>
+  );
 };
 
 const LocationForm = props => {
@@ -63,7 +90,7 @@ const LocationForm = props => {
 
         <div className="field">
           <Field
-            name="address"
+            name="restaurantLocation"
             component={renderField}
             type="text"
             label="Address"
@@ -79,16 +106,28 @@ const LocationForm = props => {
           />
         </div>
 
-        <div className="field">
-          <div className="control">
-            <label className="label">Review</label>
-            <Field name="review" component={renderField} type="textarea" />
-          </div>
+        <div className="field-rating">
+          <Field
+            name="rating"
+            component={renderField}
+            label="Rating"
+            type="rate"
+            setOptions={[5, 4, 3, 2, 1]}
+          />
         </div>
 
         <div className="field">
-          <div className="control">
-            <button className="button is-link">Save</button>
+          <Field
+            name="review"
+            component={renderField}
+            label="Review"
+            type="textarea"
+          />
+        </div>
+
+        <div className="field">
+          <div className="btn-control">
+            <button className="btn btn-primary btn-block">Save</button>
           </div>
         </div>
       </form>
