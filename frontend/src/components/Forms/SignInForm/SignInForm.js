@@ -7,16 +7,38 @@ import './SignInForm.scss'
 import { signInSuccess } from '../../../actions/signInActions'
 
 export class SignInForm extends Component {
-  handleSignIn = () => {
-    this.props.signInSuccess(true);
+  state={"errorMessage": null}
+
+  handleSignIn = (bool) => {
+    this.props.signInSuccess(bool);
   }
 
   responseGoogle = (response) => {
-    this.handleSignIn()
-    console.log(response);
+    if (response.error) {
+      this.setState({"errorMessage": response.error})
+      this.handleSignIn(false, response.error)
+    } else {
+      this.handleSignIn(true)
+    }
+    console.log(response)
   }
 
   render() {
+    console.log(this.props.signInStatus)
+    console.log('props login', this.props.loggedIn)
+    if (this.props.signInStatus === null) {
+      return (
+        <GoogleLogin
+          clientId="249486761636-7v9e2d4eopnh2hcedo5fa3uu0uqvg7t1.apps.googleusercontent.com"
+          onSuccess={this.responseGoogle}
+          onFailure={this.responseGoogle}
+          isSignedIn={true}
+          render={renderProps => (
+            <div>Loading...</div>
+          )}
+        />
+      )
+    }
     return (
       <div className="container-fluid signInForm-container">
         <div className="container">
@@ -33,9 +55,12 @@ export class SignInForm extends Component {
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 isSignedIn={true}
-
               />
-
+              {this.state.errorMessage ?
+                <div className="error-message">Please sign in to use Map-Share</div>
+                :
+                null
+              }
             </div>
           </div>
         </div>

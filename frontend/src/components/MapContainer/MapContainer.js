@@ -25,6 +25,7 @@ export class MapContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.signInStatus !== this.props.signInStatus && this.props.signInStatus === true) {
+      this.setState({"loggedIn": true})
       this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
     }
   }
@@ -36,7 +37,6 @@ export class MapContainer extends Component {
 
   render() {
     const { toggleMarks, signInStatus } = this.props;
-
     return (
       <>
         {signInStatus ?
@@ -70,7 +70,7 @@ export class MapContainer extends Component {
             </InfoWindow>
           </CurrentLocation>
           :
-          <SignInForm />
+          <SignInForm signInStatus={signInStatus} />
         }
       </>
     );
