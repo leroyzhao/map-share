@@ -1,5 +1,5 @@
 const initSignInState = {
-  status: false
+  status: null
 }
 
 export const signInStatusReducer = (state = initSignInState.status, action) => {

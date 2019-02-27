@@ -1,0 +1,50 @@
+.loading {
+  display: none;
+}
+
+.signInForm-container {
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.adorama.com/alc/wp-content/uploads/2018/02/BBBURGER8-1024x683-825x465.jpg");
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  margin: 0 auto; /* Added */
+  //float: none; /* Added */
+  width: 80%;
+  max-width: 600px;
+  padding-bottom:8px;
+}
+
+.card-text {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rounded {
+  border-radius:1rem !important;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+}
+
+.btn:hover {
+  -webkit-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+  -moz-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+}
+
+.error-message {
+  margin-top: .2rem;
+  color: red;
+  font-size: small;
+}
