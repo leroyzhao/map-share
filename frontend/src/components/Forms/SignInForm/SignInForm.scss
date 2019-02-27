@@ -27,3 +27,16 @@
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
+.rounded {
+  border-radius:1rem !important;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 20px 0 rgba(0, 0, 0, 0.245);
+}
+
+.btn:hover {
+  -webkit-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+  -moz-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.332), 0 6px 10px 0 rgba(0, 0, 0, 0.245) !important;
+}

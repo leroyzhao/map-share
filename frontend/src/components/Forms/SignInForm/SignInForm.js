@@ -20,16 +20,16 @@ export class SignInForm extends Component {
     return (
       <div className="container-fluid signInForm-container">
         <div className="container">
-          <div className="card text-center">
+          <div className="card text-center rounded">
             <img className="card-img-top" src="" alt=""/>
             <div className="card-body">
-              <h1 className="card-title">Welcome to Map-Share!</h1>
+              <h1 className="card-title">Welcome to<br/>Map-Share!</h1>
               <p className="card-text">This is the best webapp ever.</p>
 
               <GoogleLogin
                 className="btn"
                 clientId="249486761636-7v9e2d4eopnh2hcedo5fa3uu0uqvg7t1.apps.googleusercontent.com"
-                buttonText="Login"
+                buttonText="Login with Google!"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 isSignedIn={true}
