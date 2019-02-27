@@ -215,13 +215,12 @@ module.exports = () => {
             console.log('failed to update group', err)
           })
 
-          restaurantData.remove().then(data => {
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
+          restaurantData.remove()
+          .then(data => resolve(data))
+          .catch(err => reject(err))
 
-        }).catch(err => reject(err))
+        })
+        .catch(err => reject(err))
 
       })
     },
@@ -267,6 +266,7 @@ module.exports = () => {
                     rangeData.save()
                     .catch(err => console.log("err",err))
                   })
+                  .catch(err => console.log("err",err))
 
                   PriceRange.findOne({ priceRange: doc.restaurantPriceRange })
                   .then(rangeData => {
@@ -274,6 +274,7 @@ module.exports = () => {
                     rangeData.save()
                     .catch(err => console.log("err",err))
                   })
+                  .catch(err => console.log("err",err))
 
                 }
 
@@ -327,7 +328,6 @@ module.exports = () => {
               _id: 0,
               __v: 0,
               "restaurantReviews.locationId" : 0,
-              "restaurantReviews._id" : 0,
               "restaurantReviews.__v" : 0
             }
           },
