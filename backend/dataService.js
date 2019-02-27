@@ -670,6 +670,39 @@ module.exports = () => {
         .catch(err => reject(err));
       })
     },
+
+    processUser: (userData) => {
+      return new Promise((resolve, reject) => {
+
+        let { userEmail, userFirstName, userLastName, googleId, userPicture } = userData
+
+        if (!(userEmail && userFirstName && userLastName && userPicture && googleId)) {
+          reject({"error": "please provide userEmail, userFirstName, userLastName, googleId, userPicture"})
+          return
+        }
+
+        User.findOne({ googleId })
+        .then(data => {
+          if (data) {
+            resolve(data)
+          } else {
+            User.create({
+              userEmail,
+              userFirstName,
+              userLastName,
+              userPicture,
+              googleId
+            })
+            .then(data => {
+              console.log('new user created')
+              resolve(data)
+            })
+            .catch(err => reject(err))
+          }
+        })
+        .catch(err => reject(err))
+      })
+    },
     
     getUserById: (userId) => {
       return new Promise((resolve, reject) => {
