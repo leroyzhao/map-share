@@ -9,13 +9,17 @@ export const postReview = data => {
       .then(res => {
         let reviewData = {
           reviewContent: res.data.reviewContent,
-          reviewRating: res.data.reviewContent
+          reviewRating: res.data.reviewContent,
+          _id: res.data._id,
+          reviewUser: {
+            userId: res.data.reviewUser.userId
+          }
         };
         dispatch(addReview(reviewData));
         dispatch(toggleAddReview(false));
       })
       .catch(err => {
-        console.log(err.response);
+        console.log(err);
       });
   };
 };
@@ -27,7 +31,8 @@ export const reviewFetchData = data => {
         params: { locationId: data }
       })
       .then(resReviews => {
-        dispatch(currentReviews(resReviews.data));
+        console.log(resReviews.data);
+        dispatch(currentReviews(resReviews.data.restaurantReviews));
       })
       .catch(err => console.log("review get error: ", err));
   };

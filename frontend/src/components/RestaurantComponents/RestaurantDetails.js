@@ -91,9 +91,7 @@ export class RestaurantDetails extends Component {
               <div
                 className="full-stars"
                 style={{
-                  width: `calc(100% * ${this.getRatingSum(
-                    getReviews.restaurantReviews
-                  ) / 5})`
+                  width: `calc(100% * ${this.getRatingSum(getReviews) / 5})`
                 }}
               />
             </div>
@@ -117,8 +115,8 @@ export class RestaurantDetails extends Component {
 
           <div className="col-12">
             {console.log(getReviews)}
-            {getReviews.restaurantReviews.length &&
-              getReviews.restaurantReviews.map(review => {
+            {getReviews.length &&
+              getReviews.map(review => {
                 return (
                   <div className="row">
                     <div className="col-9">{review.reviewContent}</div>
