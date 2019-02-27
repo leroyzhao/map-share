@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   userEmail: {
     type: String,
     unique: true,
-    required: [true, 'Name field is required']
+    required: [true, 'user email is required']
   },
   userFirstName: {
     type: String,
@@ -18,8 +18,8 @@ const UserSchema = new Schema({
   },
   userGroups: [
     {
-      groupId: String,
-      groupName: String
+      type: Schema.Types.ObjectId,
+      ref: 'group'
     }
   ]
 })
