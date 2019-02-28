@@ -4,13 +4,14 @@ import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
 
 import { marksFetchData, getUserData } from "../../actions/marksActions";
-import { signInSuccess } from '../../actions/signInActions'
-import { GoogleLogout } from 'react-google-login';
-import './MapContainer.scss'
+import { signInSuccess } from "../../actions/signInActions";
+import { GoogleLogout } from "react-google-login";
+
+import "./MapContainer.scss";
 
 import CurrentLocation from "../CurrentLocation/CurrentLocation";
 import RestaurantDetails from "../RestaurantComponents/RestaurantDetails";
-import SignInForm from "../Forms/SignInForm/SignInForm";
+import SignInForm from "../SignInForm/SignInForm";
 
 export class MapContainer extends Component {
   // componentWillMount() {
@@ -24,40 +25,45 @@ export class MapContainer extends Component {
   // }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.signInStatus !== this.props.signInStatus && this.props.signInStatus === true) {
-      this.setState({"loggedIn": true})
+    if (
+      prevProps.signInStatus !== this.props.signInStatus &&
+      this.props.signInStatus === true
+    ) {
+      this.setState({ loggedIn: true });
       this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
     }
   }
 
   logout = () => {
-    console.log('firing logout')
+    console.log("firing logout");
     this.props.signInSuccess(false);
-  }
+  };
 
   render() {
     const { toggleMarks, signInStatus } = this.props;
     return (
       <>
-        {signInStatus ?
-          <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-
+        {console.log(signInStatus)}
+        {signInStatus ? (
+          <CurrentLocation
+            centerAroundCurrentLocation
+            google={this.props.google}
+          >
             <div className="box-btn-GoogleLogOut">
               <GoogleLogout
                 buttonText="Logout"
                 onLogoutSuccess={this.logout}
                 className="btn-GoogleLogOut"
-                onClick={(e)=> {console.log("clicked!")}}
               />
             </div>
 
-            {toggleMarks.status ?
-              <div className='detailsContainer container-fluid'>
+            {toggleMarks.status ? (
+              <div className="detailsContainer container-fluid">
                 <RestaurantDetails />
               </div>
-              :
-              <div className="slideOut"></div>
-            }
+            ) : (
+              <div className="slideOut" />
+            )}
 
             <InfoWindow
               marker={toggleMarks.activeMarker}
@@ -69,9 +75,9 @@ export class MapContainer extends Component {
               </div>
             </InfoWindow>
           </CurrentLocation>
-          :
-          <SignInForm signInStatus={signInStatus} />
-        }
+        ) : (
+          <SignInForm />
+        )}
       </>
     );
   }
