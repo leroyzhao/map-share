@@ -20,12 +20,21 @@ export class RestaurantDetails extends Component {
   // };
 
   handleSubmit = values => {
+    let getGroupId = this.props.getUserData.userGroups[
+      this.props.getUserData.userGroups.length - 1
+    ];
+
     let data = {
       ...values,
       geometry: {
         coordinates: [this.props.position.lat, this.props.position.lng]
-      }
+      },
+      userId: this.props.getUserData._id,
+      groupId: getGroupId,
+      userFirstName: this.props.getUserData.userFirstName,
+      userLastName: this.props.getUserData.userLastName
     };
+
     this.props.saveMark(data);
     this.props.addMarker(false);
   };
@@ -60,7 +69,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    addMark: state.addMarkerReducer
+    addMark: state.addMarkerReducer,
+    getUserData: state.userFetchReducer
   };
 };
 

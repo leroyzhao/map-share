@@ -3,14 +3,15 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
 
-import { marksFetchData, getUserData } from "../../actions/marksActions";
-import { signInSuccess } from '../../actions/signInActions'
-import { GoogleLogout } from 'react-google-login';
-import './MapContainer.scss'
+import { marksFetchData } from "../../actions/marksActions";
+import { signInSuccess } from "../../actions/signInActions";
+import { GoogleLogout } from "react-google-login";
+
+import "./MapContainer.scss";
 
 import CurrentLocation from "../CurrentLocation/CurrentLocation";
 import RestaurantDetails from "../RestaurantComponents/RestaurantDetails";
-import SignInForm from "../Forms/SignInForm/SignInForm";
+import SignInForm from "../SignInForm/SignInForm";
 
 export class MapContainer extends Component {
   // componentWillMount() {
@@ -24,23 +25,37 @@ export class MapContainer extends Component {
   // }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.signInStatus !== this.props.signInStatus && this.props.signInStatus === true) {
-      this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
+    console.log(this.props.getUserData);
+    if (
+      prevProps.getUserData !== this.props.getUserData &&
+      this.props.signInStatus === true
+    ) {
+      let groupId = this.props.getUserData.userGroups[
+        this.props.getUserData.userGroups.length - 1
+      ];
+
+      this.props.marksFetchData(
+        "https://map-share.herokuapp.com/api/marks?groupId=" + groupId
+      );
     }
   }
 
   logout = () => {
+    console.log("firing logout");
     this.props.signInSuccess(false);
-  }
+  };
 
   render() {
     const { toggleMarks, signInStatus } = this.props;
 
     return (
       <>
-        {signInStatus ?
-          <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-
+        {console.log(signInStatus)}
+        {signInStatus ? (
+          <CurrentLocation
+            centerAroundCurrentLocation
+            google={this.props.google}
+          >
             <div className="box-btn-GoogleLogOut">
               <GoogleLogout
                 buttonText="Logout"
@@ -49,13 +64,13 @@ export class MapContainer extends Component {
               />
             </div>
 
-            {toggleMarks.status ?
-              <div className='detailsContainer container-fluid'>
+            {toggleMarks.status ? (
+              <div className="detailsContainer container-fluid">
                 <RestaurantDetails />
               </div>
-              :
-              <div className="slideOut"></div>
-            }
+            ) : (
+              <div className="slideOut" />
+            )}
 
             <InfoWindow
               marker={toggleMarks.activeMarker}
@@ -67,9 +82,9 @@ export class MapContainer extends Component {
               </div>
             </InfoWindow>
           </CurrentLocation>
-          :
+        ) : (
           <SignInForm />
-        }
+        )}
       </>
     );
   }
@@ -79,7 +94,6 @@ const mapDispatchToProps = dispatch => {
   console.log("map dispatch to props from mapcontainer");
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
-    getUserData: data => dispatch(getUserData(data)),
     signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
@@ -87,7 +101,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     toggleMarks: state.marksToggleReducer,
-    signInStatus: state.signInStatusReducer
+    signInStatus: state.signInStatusReducer,
+    getUserData: state.userFetchReducer
   };
 };
 

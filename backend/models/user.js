@@ -21,7 +21,20 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'group'
     }
-  ]
+  ],
+  userPicture: {
+    type: String,
+  },
+  googleId: {
+    type: String,
+    required: [true, 'must provide googleId field'],
+    validate: {
+      validator: function(v) {
+        return /^\d+$/.test(v);
+      },
+      message: props => `${props.value} is not a valid google id!`
+    },
+  }
 })
 
 UserSchema.virtual('userId').get(function() { return this._id; });
