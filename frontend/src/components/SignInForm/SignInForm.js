@@ -4,7 +4,7 @@ import { GoogleLogin } from "react-google-login";
 
 import "./SignInForm.scss";
 
-import { signInSuccess } from "../../actions/signInActions";
+import { signInSuccess, postUser } from "../../actions/signInActions";
 
 export class SignInForm extends Component {
   state = { errorMessage: null };
@@ -63,8 +63,8 @@ export class SignInForm extends Component {
       this.handleSignIn(false, response.error);
     } else {
       this.handleSignIn(true);
+      this.props.postUser(response.w3);
     }
-    console.log(response);
   };
 
   render() {
@@ -104,7 +104,8 @@ export class SignInForm extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    signInSuccess: bool => dispatch(signInSuccess(bool))
+    signInSuccess: bool => dispatch(signInSuccess(bool)),
+    postUser: data => dispatch(postUser(data))
   };
 };
 

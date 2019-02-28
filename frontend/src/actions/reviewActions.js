@@ -1,18 +1,33 @@
 import axios from "axios";
 
-export const putReview = data => {};
+export const putReview = data => {
+  return dispatch => {
+    axios
+      .put("https://map-share.herokuapp.com/api/reviews/" + data.reviewId, data)
+      .then(res => {
+        dispatch(reviewFetchData(data.locationId));
+        dispatch(toggleEditReview(false));
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+  };
+};
 
 export const postReview = data => {
   return dispatch => {
     axios
       .post("https://map-share.herokuapp.com/api/reviews", data)
       .then(res => {
+        console.log(res.data);
         let reviewData = {
           reviewContent: res.data.reviewContent,
           reviewRating: res.data.reviewContent,
           _id: res.data._id,
           reviewUser: {
-            userId: res.data.reviewUser.userId
+            userId: res.data.reviewUser.userId,
+            userFirstName: res.data.reviewUser.userFirstName,
+            userLastName: res.data.reviewUser.userLastName
           }
         };
         dispatch(addReview(reviewData));

@@ -107,7 +107,7 @@ export class CurrentLocation extends Component {
       this.map = new maps.Map(node, mapConfig);
       let test = this.map;
 
-      maps.event.addListener(test, "click", function (event) {
+      maps.event.addListener(test, "click", function(event) {
         addMark(test, maps, event.latLng);
       });
 
@@ -115,8 +115,10 @@ export class CurrentLocation extends Component {
         this.props.addMarker(true);
         let marker = new maps.Marker({
           position: latLng,
-          map: target
+          map: target,
+          animation: maps.Animation.DROP
         });
+
         this.setMark(latLng, marker);
       };
     }
@@ -130,7 +132,10 @@ export class CurrentLocation extends Component {
       let target = this.map;
 
       this.props.marks.map(mark => {
-        let position = { lat: mark.geometry.coordinates[0], lng: mark.geometry.coordinates[1] }
+        let position = {
+          lat: mark.geometry.coordinates[0],
+          lng: mark.geometry.coordinates[1]
+        };
         let marker = new maps.Marker({
           position: position
         });
@@ -141,7 +146,8 @@ export class CurrentLocation extends Component {
 
         marker.setMap(target);
 
-        marker.addListener("click", function () {
+        marker.addListener("click", function() {
+          target.setCenter(marker.getPosition());
           clickOnMarker();
         });
       });
@@ -167,7 +173,12 @@ export class CurrentLocation extends Component {
           Loading map...
         </div>
         <AddRestaurant position={this.state.newMarkPosition} />
-        <RenderMap map={this.map} google={this.props.google} mapcenter={this.state.currentLocation} children={this.props} />
+        <RenderMap
+          map={this.map}
+          google={this.props.google}
+          mapcenter={this.state.currentLocation}
+          children={this.props}
+        />
       </div>
     );
   }

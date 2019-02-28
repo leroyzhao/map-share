@@ -15,12 +15,14 @@ export class PutReview extends Component {
     let data = {
       locationId: this.props.locationId,
       reviewUser: {
-        userId: "5c7015b00b10a5189ccc07e2"
+        userId: this.props.getUserData._id,
+        userFirstName: this.props.getUserData.userFirstName,
+        userLastName: this.props.getUserData.userLastName
       },
       reviewContent: values.review,
-      reviewRating: values.rating
+      reviewRating: values.rating,
+      reviewId: this.props.reviewId
     };
-
     this.props.putReview(data);
   };
 
@@ -34,7 +36,7 @@ export class PutReview extends Component {
           dialogClassName="dialog"
         >
           <Modal.Header closeButton>
-            <Modal.Title>edit Review</Modal.Title>
+            <Modal.Title>Edit Review</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <ReviewForm onSubmit={this.handleSubmit} />
@@ -54,7 +56,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    editReview: state.editReviewReducer
+    editReview: state.editReviewReducer,
+    getUserData: state.userFetchReducer
   };
 };
 

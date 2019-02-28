@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { GoogleApiWrapper, InfoWindow } from "google-maps-react";
 
-import { marksFetchData, getUserData } from "../../actions/marksActions";
+import { marksFetchData } from "../../actions/marksActions";
 import { signInSuccess } from "../../actions/signInActions";
 import { GoogleLogout } from "react-google-login";
 
@@ -25,12 +25,18 @@ export class MapContainer extends Component {
   // }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(this.props.getUserData);
     if (
-      prevProps.signInStatus !== this.props.signInStatus &&
+      prevProps.getUserData !== this.props.getUserData &&
       this.props.signInStatus === true
     ) {
-      this.setState({ loggedIn: true });
-      this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
+      let groupId = this.props.getUserData.userGroups[
+        this.props.getUserData.userGroups.length - 1
+      ];
+
+      this.props.marksFetchData(
+        "https://map-share.herokuapp.com/api/marks?groupId=" + groupId
+      );
     }
   }
 
@@ -41,6 +47,7 @@ export class MapContainer extends Component {
 
   render() {
     const { toggleMarks, signInStatus } = this.props;
+
     return (
       <>
         {console.log(signInStatus)}
@@ -87,7 +94,6 @@ const mapDispatchToProps = dispatch => {
   console.log("map dispatch to props from mapcontainer");
   return {
     marksFetchData: url => dispatch(marksFetchData(url)),
-    getUserData: data => dispatch(getUserData(data)),
     signInSuccess: bool => dispatch(signInSuccess(bool))
   };
 };
@@ -95,7 +101,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     toggleMarks: state.marksToggleReducer,
-    signInStatus: state.signInStatusReducer
+    signInStatus: state.signInStatusReducer,
+    getUserData: state.userFetchReducer
   };
 };
 

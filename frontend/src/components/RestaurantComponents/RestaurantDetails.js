@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 
 import { toggleMarker } from "../../actions/restaurantActions";
 import {
@@ -14,6 +15,10 @@ import PostReview from "../ReviewComponents/PostReview";
 import PutReview from "../ReviewComponents/PutReview";
 
 export class RestaurantDetails extends Component {
+  state = {
+    reviewId: ""
+  };
+
   componentWillMount() {
     this.props.reviewFetchData(this.props.getRestaurant.data.locationId);
   }
@@ -32,8 +37,17 @@ export class RestaurantDetails extends Component {
     this.props.toggleAddReview(true);
   };
 
-  handleEditReview = () => {
-    this.props.toggleEditReview(true);
+  handleEditReview = review => {
+    if (this.props.getUserData._id === review.reviewUser.userId) {
+      this.setState({
+        reviewId: review._id
+      });
+
+      this.props.toggleEditReview(true);
+    } else {
+      console.log("current userID: ", this.props.getUserData._id);
+      console.log("not same userID: ", review.reviewUser.userId);
+    }
   };
 
   getRatingSum = reviews => {
@@ -57,7 +71,10 @@ export class RestaurantDetails extends Component {
     return (
       <div>
         <PostReview locationId={getRestaurant.data.locationId} />
-        <PutReview />
+        <PutReview
+          locationId={getRestaurant.data.locationId}
+          reviewId={this.state.reviewId}
+        />
         <div className="row">
           <div className="col-12 p-0">
             <img
@@ -114,14 +131,20 @@ export class RestaurantDetails extends Component {
           </div>
 
           <div className="col-12">
-            {console.log(getReviews)}
             {getReviews.length &&
               getReviews.map(review => {
                 return (
-                  <div className="row">
-                    <div className="col-9">{review.reviewContent}</div>
-                    <div className="col-3" onClick={this.handleEditReview}>
-                      edit
+                  <div className="row" key={review._id}>
+                    <div
+                      className="col-12"
+                      onClick={() => this.handleEditReview(review)}
+                    >
+                      {review.reviewContent}
+                      {review.updatedAt
+                        ? moment(parseInt(review.updatedAt)).fromNow()
+                        : moment(parseInt(review.createdAt)).fromNow()}
+                      {review.reviewUser.userFirstName}
+                      {review.reviewUser.userLastName}
                     </div>
                     <div className="col-12">
                       <hr className="review-hr" />
@@ -148,7 +171,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     getRestaurant: state.restaurantDetailReducer,
-    getReviews: state.reviewsContentReducer
+    getReviews: state.reviewsContentReducer,
+    getUserData: state.userFetchReducer
   };
 };
 
