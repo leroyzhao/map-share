@@ -1,6 +1,6 @@
 const initSignInState = {
   status: false
-}
+};
 
 export const signInStatusReducer = (state = initSignInState.status, action) => {
   switch (action.type) {

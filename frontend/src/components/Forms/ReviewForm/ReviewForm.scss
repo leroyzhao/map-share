@@ -1,0 +1,50 @@
+/****** Style Star Rating Widget *****/
+@import url("https://use.fontawesome.com/releases/v5.7.2/css/solid.css");
+
+.field {
+  .btn-control {
+    display: flex;
+    justify-content: center;
+    margin: 5% 0 4% 0;
+  }
+}
+
+.field-rating {
+  display: flex;
+  justify-content: center;
+  margin: 5% 0;
+
+  label {
+    display: block;
+    text-align: center;
+  }
+}
+
+.rating-container {
+  .rating {
+    border: none;
+    display: flex;
+    flex-direction: row-reverse;
+    float: left;
+  }
+
+  input {
+    display: none;
+  }
+
+  .stars:before {
+    margin: 0 5px;
+    font-size: 1.25em;
+    font-family: "Font Awesome 5 Free";
+    content: "\f005";
+  }
+
+  .stars {
+    color: #ddd;
+  }
+
+  /* show gold star when clicked */
+  input:checked ~ .stars {
+    color: #ffd700;
+  }
+}

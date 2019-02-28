@@ -1,6 +1,6 @@
 @import url("https://use.fontawesome.com/releases/v5.7.2/css/solid.css");
 
-@media only screen and (min-width: 700px) and (max-width: 1050px) {
+@media only screen and (min-width: 700px) and (max-width: 1400px) {
   .detailsContainer {
     width: 40%;
   }
@@ -15,6 +15,10 @@
 .btn-custom {
   position: absolute;
   right: 0px;
+}
+
+.btn {
+  margin-top: 0 !important;
 }
 
 .preview-info-custom {
@@ -37,12 +41,13 @@
     overflow: hidden;
     color: #fde16d;
   }
-  .empty-stars:before, .full-stars:before {
+  .empty-stars:before,
+  .full-stars:before {
     font-family: "Font Awesome 5 Free";
     content: "\f005\f005\f005\f005\f005";
     font-size: 14pt;
   }
-  
+
   .empty-stars:before {
     -webkit-text-stroke: 1px #848484;
   }

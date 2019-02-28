@@ -330,7 +330,7 @@ module.exports = () => {
               "restaurantReviews.locationId" : 0,
               "restaurantReviews.__v" : 0
             }
-          },
+          }
         ])
         .then(data => {
           if (data.length === 1) {
@@ -378,7 +378,7 @@ module.exports = () => {
           }
 
           // review only created if user in group
-          Review.create({ ...reviewData })
+          Review.create({ ...reviewData, createdAt: Date.now() })
           .then(reviewData => {
             console.log('returned from review creation', reviewData)
             doc.restaurantReviews.push(reviewData.id)
@@ -434,6 +434,7 @@ module.exports = () => {
           else {
             doc.reviewContent = newReview.reviewContent
             doc.reviewRating = newReview.reviewRating
+            doc.updatedAt = Date.now()
 
             doc.save()
             .then(data => resolve({"success": data}))

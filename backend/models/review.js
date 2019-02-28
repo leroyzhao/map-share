@@ -35,8 +35,11 @@ const ReviewSchema = new Schema({
       type: Schema.Types.ObjectId,
       required: [true, 'userId is required to save review']
     },
-    userName: String
+    userFirstName: String,
+    userLastName: String
   },
+  updatedAt: String,
+  createdAt: String,
 }, { runSettersOnQuery: true })
 
 // const ReviewSchema = new Schema({
