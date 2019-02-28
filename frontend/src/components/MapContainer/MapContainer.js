@@ -25,17 +25,18 @@ export class MapContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.signInStatus !== this.props.signInStatus && this.props.signInStatus === true) {
+      this.setState({"loggedIn": true})
       this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
     }
   }
 
   logout = () => {
+    console.log('firing logout')
     this.props.signInSuccess(false);
   }
 
   render() {
     const { toggleMarks, signInStatus } = this.props;
-
     return (
       <>
         {signInStatus ?
@@ -46,6 +47,7 @@ export class MapContainer extends Component {
                 buttonText="Logout"
                 onLogoutSuccess={this.logout}
                 className="btn-GoogleLogOut"
+                onClick={(e)=> {console.log("clicked!")}}
               />
             </div>
 
@@ -68,7 +70,7 @@ export class MapContainer extends Component {
             </InfoWindow>
           </CurrentLocation>
           :
-          <SignInForm />
+          <SignInForm signInStatus={signInStatus} />
         }
       </>
     );

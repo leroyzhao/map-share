@@ -3,10 +3,15 @@ import { reducer as formReducer } from "redux-form";
 import {
   addMarkerReducer,
   marksFetchReducer,
-  marksToggleReducer,
+  marksToggleReducer
 } from "./marksReducer";
 import { restaurantDetailReducer } from "./restaurantsReducer";
-import { signInStatusReducer } from './signInReducer'
+import {
+  addReviewReducer,
+  reviewsContentReducer,
+  editReviewReducer
+} from "./reviewReducer";
+import { signInStatusReducer } from "./signInReducer";
 
 export default combineReducers({
   marksFetchReducer,
@@ -14,5 +19,8 @@ export default combineReducers({
   addMarkerReducer,
   restaurantDetailReducer,
   signInStatusReducer,
+  addReviewReducer,
+  editReviewReducer,
+  reviewsContentReducer,
   form: formReducer
 });
