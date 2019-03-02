@@ -10,20 +10,22 @@ import GroupLanding from "../GroupLanding/GroupLanding"
 
 export class AuthContainer extends Component {
   render() {
-    const { toggleMarks, signInStatus } = this.props;
-
-    console.log("HERE is sign in status", signInStatus)
-    console.log(this.props.getUserData)
+    const { signInStatus, getUserData } = this.props;
     return (
       <>
-        {signInStatus ?
-          (this.props.getUserData.userGroups && this.props.getUserData.userGroups.length != 0) ? (
-            <MapContainer />
+        {
+          signInStatus ?
+            (getUserData.userGroups) ? (
+              (getUserData.userGroups && getUserData.userGroups.length != 0) ? (
+                <MapContainer />
+              ) : (
+                <GroupLanding />
+              )) : (
+                <div>Loading User</div>
           ) : (
-            <GroupLanding />
-        ) : (
-          <SignInForm />
-        )}
+            <SignInForm />
+          )
+        }
       </>
     );
   }
@@ -37,7 +39,6 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    toggleMarks: state.marksToggleReducer,
     signInStatus: state.signInStatusReducer,
     getUserData: state.userFetchReducer
   };
