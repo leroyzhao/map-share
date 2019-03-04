@@ -8,8 +8,7 @@ export const joinGroup = (groupId, userId) => {
         addGroup: groupId
       })
       .then(res => {
-        console.log("RETURNED FROM PUTTTT", res.data)
-        dispatch(addGroupToUser(res.data._id))
+        dispatch(addGroupToUser(res.data.userGroups[res.data.userGroups.length - 1]))
       })
       .catch(err => {
         dispatch(joinGroupError(err.response.data.error.message || err.response.data.error))
