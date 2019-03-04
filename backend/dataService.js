@@ -753,9 +753,9 @@ module.exports = () => {
           User.findOneAndUpdate(
             { _id: userId }, 
             addGroup ? {
-              $pull: {userGroups: mongoose.Types.ObjectId(addGroup)}
+              $push: {userGroups: mongoose.Types.ObjectId(addGroup)}
             } : {
-              $push: {userGroups: mongoose.Types.ObjectId(removeGroup)}
+              $pull: {userGroups: mongoose.Types.ObjectId(removeGroup)}
             },
             { new: true }
           )
