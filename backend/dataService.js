@@ -717,6 +717,71 @@ module.exports = () => {
         .catch(err => reject(err));
       });
     },
+
+    updateUserById: (userId, userData) => {
+      return new Promise((resolve, reject) => {
+
+        let { addGroup, removeGroup } = userData
+
+        if ((addGroup && removeGroup) || !(addGroup || removeGroup)) {
+          reject("either include addGroup or removeGroup (xor)")
+          return
+        }
+
+        let groupId = addGroup ? addGroup : removeGroup
+
+        Group.findById(groupId)
+        .then(doc => {
+
+          if (!doc) {
+            reject("group doesn't exist") //TURN INTO 404????????????
+            return
+          }
+          else if (doc.groupMembers.some(id => {return id.equals(userId)})) {
+            if (removeGroup) {
+              doc.groupMembers.splice(doc.groupMembers.indexOf(userId), 1)
+            } else {
+              reject("user already in group")
+              return
+            }
+          }
+          else if (removeGroup) {
+            reject("user not in group")
+            return
+          }
+
+          User.findOneAndUpdate(
+            { _id: userId }, 
+            addGroup ? {
+              $pull: {userGroups: mongoose.Types.ObjectId(addGroup)}
+            } : {
+              $push: {userGroups: mongoose.Types.ObjectId(removeGroup)}
+            },
+            { new: true }
+          )
+          .then(data => {
+            if (data) {
+              console.log('user exists')
+              if (addGroup) {
+                doc.groupMembers.push(userId)
+              }
+              doc.save()
+              .then(data => console.log("new group:", data))
+              .catch(err => console.log("error when saving updated group", err))
+              console.log("successfull in updating user", data)
+              resolve(data)
+            } else {
+              reject("user does not exist")
+            }
+          })
+          .catch(err => {
+            console.log('error deleting group from user')
+            reject(err)
+          })
+        })
+        .catch(err => reject(err))
+      })
+    },
     
     getGroups: () => {
       return new Promise((resolve, reject) => {

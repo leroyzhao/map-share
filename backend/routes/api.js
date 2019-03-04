@@ -129,14 +129,14 @@ router.get('/marks', (req,res,next) => {
 
 /////////////////////////USER///////////////////////////////
 
-// get all users // remove in production!
-router.get('/users', (req,res,next) => {
-  data.getUsers().then(data => {
-    res.json(data);
-  }).catch(err => {
-    res.send({'ilya error?': err})
-  })
-});
+// // get all users // remove in production!
+// router.get('/users', (req,res,next) => {
+//   data.getUsers().then(data => {
+//     res.json(data);
+//   }).catch(err => {
+//     res.send({'ilya error?': err})
+//   })
+// });
 
 // add new user
 router.post('/users', (req,res,next) => {
@@ -156,6 +156,15 @@ router.get('/users/:id', (req,res,next) => {
     res.status(400).send({"error": err})
   })
 })
+
+// add user to existing group (or other update?)
+router.put('/users/:id', (req,res,next) => {
+  data.updateUserById(req.params.id, req.body).then(data => {
+    res.status(200).json(data);
+  }).catch(err => {
+    res.status(400).send({"error":err})
+  })
+});
 
 /////////////////////////CUISINE///////////////////////////////
 
