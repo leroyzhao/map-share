@@ -21,3 +21,13 @@ export const userFetchReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const joinGroupErrorReducer = (state = "", action) => {
+  switch (action.type) {
+    case "JOIN_GROUP_ERROR":
+      console.log('joingroup reducer')
+      return action.data;
+    default:
+      return state;
+  }
+} 
