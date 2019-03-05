@@ -28,6 +28,13 @@ export const marksFetchDataSuccess = marks => {
   };
 };
 
+export const markSaveDataSuccess = marks => {
+  return {
+    type: "MARK_ADD_DATA_SUCCESS",
+    marks: marks
+  };
+};
+
 export const marksFetchData = url => {
   return dispatch => {
     axios.get(url).then(res => {
@@ -74,7 +81,7 @@ export const saveMark = data => {
           }
         };
 
-        dispatch(marksFetchDataSuccess(markData));
+        dispatch(markSaveDataSuccess(markData));
 
         axios
           .post("https://map-share.herokuapp.com/api/reviews", reviewData)
@@ -83,7 +90,7 @@ export const saveMark = data => {
           });
       })
       .catch(err => {
-        console.log(err.response);
+        console.log(err);
       });
   };
 };

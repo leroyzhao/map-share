@@ -70,6 +70,7 @@ export class RestaurantDetails extends Component {
     const { getRestaurant, getReviews } = this.props;
     return (
       <div>
+        {console.log("getReviews in Details", getReviews)}
         <PostReview locationId={getRestaurant.data.locationId} />
         <PutReview
           locationId={getRestaurant.data.locationId}
@@ -134,18 +135,29 @@ export class RestaurantDetails extends Component {
             {getReviews.length &&
               getReviews.map(review => {
                 return (
-                  <div className="row" key={review._id} onClick={() => this.handleEditReview(review)}>
-
-                      <div className="col-8"><span>
-                        <p className="review-user">{review.reviewUser.userFirstName} {review.reviewUser.userLastName}</p>
-                      </span></div>
-                      <div className="col-4"><p className="review-time">{review.updatedAt
-                        ? moment(parseInt(review.updatedAt)).fromNow()
-                        : moment(parseInt(review.createdAt)).fromNow()}
-                      </p></div>
-                      <div className="col-12">
-                        <p>{review.reviewContent}</p>
-                      </div>
+                  <div
+                    className="row"
+                    key={review._id}
+                    onClick={() => this.handleEditReview(review)}
+                  >
+                    <div className="col-8">
+                      <span>
+                        <p className="review-user">
+                          {review.reviewUser.userFirstName}{" "}
+                          {review.reviewUser.userLastName}
+                        </p>
+                      </span>
+                    </div>
+                    <div className="col-4">
+                      <p className="review-time">
+                        {review.updatedAt
+                          ? moment(parseInt(review.updatedAt)).fromNow()
+                          : moment(parseInt(review.createdAt)).fromNow()}
+                      </p>
+                    </div>
+                    <div className="col-12">
+                      <p>{review.reviewContent}</p>
+                    </div>
 
                     <div className="col-12">
                       <hr className="review-hr" />
