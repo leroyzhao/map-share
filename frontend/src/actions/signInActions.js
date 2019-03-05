@@ -29,7 +29,7 @@ export const postUser = data => {
 
   return dispatch => {
     axios
-      .post("https://map-share.herokuapp.com/api/users", userData)
+      .post("https://map-share-api.herokuapp.com/api/users", userData)
       .then(res => {
         console.log("data after postUser request return: ", res.data);
         dispatch(userFetchDataSuccess(res.data));

@@ -4,7 +4,7 @@ export const joinGroup = (groupId, userId) => {
   return dispatch => {
     console.log('joinGroup action!', groupId, userId)
     axios
-      .put("https://map-share.herokuapp.com/api/users/" + userId, {
+      .put("https://map-share-api.herokuapp.com/api/users/" + userId, {
         addGroup: groupId
       })
       .then(res => {
@@ -20,13 +20,13 @@ export const createGroup = (groupName, userId) => {
   return dispatch => {
     console.log('createGroup action!', userId)
     axios
-      .post("https://map-share.herokuapp.com/api/groups", {userId, groupName})
+      .post("https://map-share-api.herokuapp.com/api/groups", {userId, groupName})
       .then(res => {
         dispatch(addGroupToUser(res.data._id))
       })
       .catch(err => console.log(err.response))
     // axios
-    //   .post("https://map-share.herokuapp.com/api/groups", data)
+    //   .post("https://map-share-api.herokuapp.com/api/groups", data)
     //   .then(res => {
     //     console.log(res.data);
     //     let reviewData = {

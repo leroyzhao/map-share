@@ -44,7 +44,7 @@ export const marksFetchData = url => {
 };
 
 export const getUserData = data => {
-  // let url = 'https://map-share.herokuapp.com/api/marks?groupId='
+  // let url = 'https://map-share-api.herokuapp.com/api/marks?groupId='
   // return dispatch => {
   // }
 };
@@ -63,7 +63,7 @@ export const saveMark = data => {
 
   return dispatch => {
     axios
-      .post("https://map-share.herokuapp.com/api/restaurants", restaurantData)
+      .post("https://map-share-api.herokuapp.com/api/restaurants", restaurantData)
       .then(res => {
         let markData = {
           locationId: res.data.locationId,
@@ -84,7 +84,7 @@ export const saveMark = data => {
         dispatch(markSaveDataSuccess(markData));
 
         axios
-          .post("https://map-share.herokuapp.com/api/reviews", reviewData)
+          .post("https://map-share-api.herokuapp.com/api/reviews", reviewData)
           .catch(err => {
             console.log(err.response);
           });

@@ -20,7 +20,7 @@ export class MapContainer extends Component {
   //   // }
 
   //   // this.props.getUserData(data)
-  //   this.props.marksFetchData("https://map-share.herokuapp.com/api/marks?");
+  //   this.props.marksFetchData("https://map-share-api.herokuapp.com/api/marks?");
   // }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ export class MapContainer extends Component {
     ];
     console.log('fetch first time')
     this.props.marksFetchData(
-      "https://map-share.herokuapp.com/api/marks?groupId=" + groupId
+      "https://map-share-api.herokuapp.com/api/marks?groupId=" + groupId
     );    
   }
   // componentDidUpdate(prevProps, prevState) {
@@ -42,7 +42,7 @@ export class MapContainer extends Component {
   //     ];
   //     console.log('fetch second time')
   //     this.props.marksFetchData(
-  //       "https://map-share.herokuapp.com/api/marks?groupId=" + groupId
+  //       "https://map-share-api.herokuapp.com/api/marks?groupId=" + groupId
   //     );
   //   }
   // }

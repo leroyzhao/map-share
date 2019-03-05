@@ -32,7 +32,7 @@ export class SignInForm extends Component {
   //               <h1 className="card-title">
   //                 Welcome to
   //                 <br />
-  //                 Map-Share!
+  //                 map-share-api!
   //               </h1>
   //               <p className="card-text">This is the best webapp ever.</p>
 
@@ -46,7 +46,7 @@ export class SignInForm extends Component {
   //               />
   //               {this.state.errorMessage ? (
   //                 <div className="error-message">
-  //                   Please sign in to use Map-Share
+  //                   Please sign in to use map-share-api
   //                 </div>
   //               ) : null}
   //             </div>
@@ -77,7 +77,7 @@ export class SignInForm extends Component {
               <h1 className="card-title">
                 Welcome to
                 <br />
-                Map-Share!
+                map-share-api!
               </h1>
               <p className="card-text">This is the best webapp ever.</p>
 
@@ -91,7 +91,7 @@ export class SignInForm extends Component {
               />
               {this.state.errorMessage ? (
                 <div className="error-message">
-                  Please sign in to use Map-Share
+                  Please sign in to use map-share-api
                 </div>
               ) : null}
             </div>

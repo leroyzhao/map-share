@@ -3,7 +3,7 @@ import axios from "axios";
 export const putReview = data => {
   return dispatch => {
     axios
-      .put("https://map-share.herokuapp.com/api/reviews/" + data.reviewId, data)
+      .put("https://map-share-api.herokuapp.com/api/reviews/" + data.reviewId, data)
       .then(res => {
         dispatch(reviewFetchData(data.locationId));
         dispatch(toggleEditReview(false));
@@ -17,7 +17,7 @@ export const putReview = data => {
 export const postReview = data => {
   return dispatch => {
     axios
-      .post("https://map-share.herokuapp.com/api/reviews", data)
+      .post("https://map-share-api.herokuapp.com/api/reviews", data)
       .then(res => {
         dispatch(addReview(res.data));
         dispatch(toggleAddReview(false));
@@ -31,7 +31,7 @@ export const postReview = data => {
 export const reviewFetchData = data => {
   return dispatch => {
     axios
-      .get("https://map-share.herokuapp.com/api/reviews", {
+      .get("https://map-share-api.herokuapp.com/api/reviews", {
         params: { locationId: data }
       })
       .then(resReviews => {
