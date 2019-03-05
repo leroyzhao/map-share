@@ -38,7 +38,7 @@ export class CurrentLocation extends Component {
   }
 
   componentDidMount() {
-    console.log("currentlocation mounted")
+    console.log("currentlocation mounted");
     if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
@@ -56,24 +56,24 @@ export class CurrentLocation extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('current location updated:')
+    console.log("current location updated:");
     if (prevProps.google !== this.props.google) {
-      console.log("CL1")
+      console.log("CL1");
       this.loadMap();
     }
 
     if (prevState.currentLocation !== this.state.currentLocation) {
-      console.log("RECENTER MAP")
+      console.log("RECENTER MAP");
       this.recenterMap();
     }
-    
+
     if (prevProps.marks !== this.props.marks) {
       //this.props.addMarker(false)
       //this.props.position.mark.setMap(null);
       this.loadMarker();
-      console.log("CL2")
+      console.log("CL2");
     }
-    console.log('end of currentlocation update')
+    console.log("end of currentlocation update");
   }
 
   recenterMap() {
@@ -112,8 +112,9 @@ export class CurrentLocation extends Component {
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
       let test = this.map;
-
+      console.log("calling load map");
       maps.event.addListener(test, "click", function(event) {
+        console.log("calling load map on click listener event");
         addMark(test, maps, event.latLng);
       });
 
@@ -174,7 +175,6 @@ export class CurrentLocation extends Component {
     const style = Object.assign({}, mapStyles.map);
     return (
       <div>
-        {this.loadMarker()}
         <div style={style} ref="map">
           Loading map...
         </div>
