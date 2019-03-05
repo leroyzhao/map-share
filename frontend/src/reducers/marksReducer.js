@@ -13,7 +13,7 @@ const initMarkerState = {
 export const marksFetchReducer = (state = initMarkerState.marks, action) => {
   switch (action.type) {
     case "MARKS_FETCH_DATA_SUCCESS":
-      return state.concat(action.marks);
+      return action.marks
     default:
       return state;
   }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+
 //import dispatch actions for create/join group
+import { createGroup, joinGroup } from "../../../actions/groupActions"
 
 import "./GroupForm.scss";
 
@@ -16,6 +18,16 @@ class GroupForm extends Component {
   validate = val => {
     if (!val) {
       this.setState({"errorMessage": "You didn't enter anything!"})
+    } else {
+      console.log('dispatch action:', this.props.action)
+      if (this.props.action === "join") {
+        console.log("want to join group with id: ", val)
+        this.props.joinGroup(val, this.props.getUserData._id)
+      } else if (this.props.action === "create") {
+        console.log("want to create group with name: ", val)
+        console.log("user thats creating: ", this.props.getUserData._id )
+        this.props.createGroup(val, this.props.getUserData._id)
+      } else console.log("invalid action!!!!!!!!")
     }
   }
   handleChange = (e) => {
@@ -54,10 +66,20 @@ class GroupForm extends Component {
   }
 }
 
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     signInSuccess: bool => dispatch(signInSuccess(bool))
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    getUserData: state.userFetchReducer
+  };
+};
 
-export default connect()(GroupForm)
+const mapDispatchToProps = dispatch => {
+  return {
+    createGroup: (a,b) => dispatch(createGroup(a,b)),
+    joinGroup: data => dispatch(joinGroup(data))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GroupForm)

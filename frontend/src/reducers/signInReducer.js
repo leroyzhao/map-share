@@ -11,10 +11,12 @@ export const signInStatusReducer = (state = initSignInState.status, action) => {
   }
 };
 
-export const userFetchReducer = (state = [], action) => {
+export const userFetchReducer = (state = {}, action) => {
   switch (action.type) {
     case "USER_FETCH_DATA_SUCCESS":
       return action.data;
+    case "ADD_GROUP":
+      return {...state, userGroups:state.userGroups.concat(action.data)};
     default:
       return state;
   }
