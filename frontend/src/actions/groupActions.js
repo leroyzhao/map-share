@@ -1,18 +1,18 @@
 import axios from "axios";
 
-export const joinGroup = data => {
+export const joinGroup = (groupId, userId) => {
   return dispatch => {
-    console.log('joinGroup action!')
-    //eventually dispatch addGroupToUser
-    // axios
-    //   .put("https://map-share.herokuapp.com/api/reviews/" + data.reviewId, data)
-    //   .then(res => {
-    //     dispatch(reviewFetchData(data.locationId));
-    //     dispatch(toggleEditReview(false));
-    //   })
-    //   .catch(err => {
-    //     console.log(err.response);
-    //   });
+    console.log('joinGroup action!', groupId, userId)
+    axios
+      .put("https://map-share.herokuapp.com/api/users/" + userId, {
+        addGroup: groupId
+      })
+      .then(res => {
+        dispatch(addGroupToUser(res.data.userGroups[res.data.userGroups.length - 1]))
+      })
+      .catch(err => {
+        dispatch(joinGroupError(err.response.data.error.message || err.response.data.error))
+      });
   };
 };
 
@@ -51,6 +51,13 @@ export const createGroup = (groupName, userId) => {
 export const addGroupToUser = data => {
   return {
     type: "ADD_GROUP",
-    data: data
+    data
+  }
+}
+
+export const joinGroupError = data => {
+  return {
+    type: "JOIN_GROUP_ERROR",
+    data
   }
 }

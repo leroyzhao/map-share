@@ -11,7 +11,11 @@ import {
   reviewsContentReducer,
   editReviewReducer
 } from "./reviewReducer";
-import { signInStatusReducer, userFetchReducer } from "./signInReducer";
+import {
+  signInStatusReducer,
+  userFetchReducer,
+  joinGroupErrorReducer
+} from "./signInReducer";
 
 export default combineReducers({
   marksFetchReducer,
@@ -20,6 +24,7 @@ export default combineReducers({
   restaurantDetailReducer,
   signInStatusReducer,
   userFetchReducer,
+  joinGroupErrorReducer,
   addReviewReducer,
   editReviewReducer,
   reviewsContentReducer,

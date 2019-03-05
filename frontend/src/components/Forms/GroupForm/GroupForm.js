@@ -19,13 +19,15 @@ class GroupForm extends Component {
     if (!val) {
       this.setState({"errorMessage": "You didn't enter anything!"})
     } else {
-      console.log('dispatch action:', this.props.action)
+      let { action, getUserData} = this.props
+      console.log('dispatch action:', action)
       if (this.props.action === "join") {
-        console.log("want to join group with id: ", val)
-        this.props.joinGroup(val, this.props.getUserData._id)
-      } else if (this.props.action === "create") {
+        console.log("group, user", val, getUserData._id )
+        console.log("user thats joining: ", getUserData._id )
+        this.props.joinGroup(val, getUserData._id)
+      } else if (action === "create") {
         console.log("want to create group with name: ", val)
-        console.log("user thats creating: ", this.props.getUserData._id )
+        console.log("user thats creating: ", getUserData._id )
         this.props.createGroup(val, this.props.getUserData._id)
       } else console.log("invalid action!!!!!!!!")
     }
@@ -38,6 +40,11 @@ class GroupForm extends Component {
     console.log("action: ", this.props.action)
     console.log("value: ", this.state.input)
     this.validate(this.state.input)
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props && this.props.action === "join") {
+      this.setState({"errorMessage": this.props.joinGroupError})
+    }
   }
   render() {
     return (
@@ -68,14 +75,15 @@ class GroupForm extends Component {
 
 const mapStateToProps = state => {
   return {
-    getUserData: state.userFetchReducer
+    getUserData: state.userFetchReducer,
+    joinGroupError: state.joinGroupErrorReducer
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     createGroup: (a,b) => dispatch(createGroup(a,b)),
-    joinGroup: data => dispatch(joinGroup(data))
+    joinGroup: (a,b) => dispatch(joinGroup(a,b))
   };
 };
 
