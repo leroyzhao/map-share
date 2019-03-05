@@ -106,8 +106,9 @@ export class CurrentLocation extends Component {
       // maps.Map() is constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
       let test = this.map;
-
+      console.log("calling load map");
       maps.event.addListener(test, "click", function(event) {
+        console.log("calling load map on click listener event");
         addMark(test, maps, event.latLng);
       });
 
