@@ -19,18 +19,7 @@ export const postReview = data => {
     axios
       .post("https://map-share.herokuapp.com/api/reviews", data)
       .then(res => {
-        console.log(res.data);
-        let reviewData = {
-          reviewContent: res.data.reviewContent,
-          reviewRating: res.data.reviewContent,
-          _id: res.data._id,
-          reviewUser: {
-            userId: res.data.reviewUser.userId,
-            userFirstName: res.data.reviewUser.userFirstName,
-            userLastName: res.data.reviewUser.userLastName
-          }
-        };
-        dispatch(addReview(reviewData));
+        dispatch(addReview(res.data));
         dispatch(toggleAddReview(false));
       })
       .catch(err => {
