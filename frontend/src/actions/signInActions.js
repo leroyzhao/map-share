@@ -1,6 +1,15 @@
 import axios from "axios";
+import { marksFetchDataSuccess } from "./marksActions"
 
-export const signInSuccess = bool => {
+export const userLogout = () => {
+  return dispatch => {
+    dispatch(signInSuccess(false));
+    dispatch(userFetchDataSuccess({}));
+    dispatch(marksFetchDataSuccess([]));
+  }
+}
+
+export const signInSuccess = (bool) => {
   return {
     type: "SIGN_IN_SUCCESS",
     status: bool

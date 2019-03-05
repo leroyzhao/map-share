@@ -38,6 +38,7 @@ export class CurrentLocation extends Component {
   }
 
   componentDidMount() {
+    console.log("currentlocation mounted")
     if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
@@ -55,19 +56,24 @@ export class CurrentLocation extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('current location updated:')
     if (prevProps.google !== this.props.google) {
+      console.log("CL1")
       this.loadMap();
     }
 
-    if (prevProps.marks !== this.props.marks) {
-      this.loadMarker();
-      console.log("previous----> ", prevProps.marks);
-      console.log("current----> ", this.props.marks);
-    }
-
     if (prevState.currentLocation !== this.state.currentLocation) {
+      console.log("RECENTER MAP")
       this.recenterMap();
     }
+    
+    if (prevProps.marks !== this.props.marks) {
+      //this.props.addMarker(false)
+      //this.props.position.mark.setMap(null);
+      this.loadMarker();
+      console.log("CL2")
+    }
+    console.log('end of currentlocation update')
   }
 
   recenterMap() {

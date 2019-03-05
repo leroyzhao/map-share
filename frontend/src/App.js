@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "./App.scss";
-import MapContainer from "./components/MapContainer/MapContainer";
+import AuthContainer from "./components/AuthContainer/AuthContainer";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <MapContainer />
+        <AuthContainer />
       </div>
     );
   }
