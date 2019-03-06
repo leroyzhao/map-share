@@ -27,6 +27,9 @@ app.use(cors())
 // initialize routes
 app.use('/api', routes);
 
+// prevent 304 error
+app.use(express.static(__dirname + '/static'));
+
 // error handling middleware
 app.use((err, req, res, next) => {
   res.status(422).send({error: err})

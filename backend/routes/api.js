@@ -4,6 +4,12 @@ const router = express.Router();
 const dataService = require("../dataService");
 const data = dataService();
 
+// prevent 304
+router.get('/*', function(req, res, next){ 
+  res.setHeader('Last-Modified', (new Date()).toUTCString());
+  next(); 
+});
+
 // get list of restaurants from db
 router.get('/restaurants', (req,res,next) => {
   data.getRestaurants().then(data => {
