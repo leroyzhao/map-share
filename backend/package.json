@@ -22,6 +22,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.heroku.com/map-share"
+    "url": "https://git.heroku.com/map-share-api"
   }
 }

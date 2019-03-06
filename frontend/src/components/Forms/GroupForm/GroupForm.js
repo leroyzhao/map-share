@@ -62,7 +62,7 @@ class GroupForm extends Component {
             <div className="error-message">
               {this.state.errorMessage}
               <br/>
-              You must be in a group to use map-share-api
+              You must be in a group to use Map-Share
             </div> 
           ) : null
         }

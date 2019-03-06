@@ -77,7 +77,7 @@ export class SignInForm extends Component {
               <h1 className="card-title">
                 Welcome to
                 <br />
-                map-share-api!
+                Map-Share!
               </h1>
               <p className="card-text">This is the best webapp ever.</p>
 
@@ -91,7 +91,7 @@ export class SignInForm extends Component {
               />
               {this.state.errorMessage ? (
                 <div className="error-message">
-                  Please sign in to use map-share-api
+                  Please sign in to use Map-Share
                 </div>
               ) : null}
             </div>
